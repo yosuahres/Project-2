@@ -1,8 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../components/home.vue';
+import MenuPage from '../components/menu.vue';
+import GameInfoPage from '../components/gameField.vue';
 
 const routes = [
-  { path: '/', name: 'home', component: HomeView },
+  { path: '/menu', name: 'MenuPage', component: MenuPage },
+  { path: '/game-info', name: 'GameInfoPage', component: GameInfoPage },
 ];
 
 const router = createRouter({
