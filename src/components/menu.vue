@@ -18,19 +18,19 @@
               <nav class="menu-nav">
                 <div class="menu-item-top">
                   <a href="/page1">
-                    <img src="../assets/icons/icon1.png" alt="1" class="menu-icon">
+                    <img src="#" alt="1" class="menu-icon">
                     Order History
                   </a>
                 </div>
                 <div class="menu-item-top">
                   <a href="/page2">
-                    <img src="../assets/icons/icon2.png" alt="2" class="menu-icon">
+                    <img src="#" alt="2" class="menu-icon">
                     Languange
                   </a>
                 </div>
                 <div class="menu-item-top">
                   <a href="/page3">
-                    <img src="../assets/icons/icon3.png" alt="3" class="menu-icon">
+                    <img src="#" alt="3" class="menu-icon">
                     Privacy Policy
                   </a>
                 </div>
