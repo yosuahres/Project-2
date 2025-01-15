@@ -1,7 +1,15 @@
 <template>
   <div>
     <header>
+    <div class="sticky-header" :class="{ 'header-scrolled': isScrolled }">
       <div class="top-bar">
+
+        <!-- header for scrolled -->
+        <div class="left-text" v-if="isScrolled">
+          Indah Puri
+        </div>
+        <!-- end -->
+
         <div class="right-icons">
           <button class="search-icon" @click="showSearch = !showSearch">
             <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
@@ -9,51 +17,45 @@
           <button class="menu-button" @click="toggleMenu">  
             ☰
           </button> 
+
+          <!-- menu modal -->
           <transition name="slide">
-            <div class="menu" v-if="showMenu">
+            <div class="menu" v-if="showMenu && !isModalOpen">
               <div class="menu-header">
                 <button class="close-menu" @click="toggleMenu">✖</button>
-                <img src="../assets/icons/logo1 (1).png" alt="Menu Logo" class="menu-logo">
+                <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
               </div>
               <nav class="menu-nav">
                 <div class="menu-item-top">
-                  <a href="/page1">
-                    <img src="#" alt="1" class="menu-icon">
-                    Order History
-                  </a>
-                </div>
-                <div class="menu-item-top">
-                  <a href="/page2">
-                    <img src="#" alt="2" class="menu-icon">
-                    Languange
-                  </a>
-                </div>
-                <div class="menu-item-top">
-                  <a href="/page3">
-                    <img src="#" alt="3" class="menu-icon">
-                    Privacy Policy
+                  <a @click.prevent="openModal">
+                    <img src="../assets/icons/language.png" alt="2" class="menu-icon">
+                    Language
                   </a>
                 </div>
               </nav>
             </div>
           </transition>
+          <!-- end of menu modal -->
         </div>
       </div>
+    </div>
 
-      <img src="../assets/icons/logo1 (1).png" alt="Header Image" class="header-image">
-      <button class="header-button">
+    <div class="pad-only">
+      <img src="../assets/icons/ip-logo.png" alt="Header Image" class="header-image">
+      <button class="header-button" @click="goToAboutPage">
         <div class="header-content">
           <h1>Indah Puri</h1>
-          <p>Open today, 06:30-21:15</p>
+          <p>Open today, 06:00-19:00</p>
         </div>
         <span class="arrow-icon">></span>
       </button>
       <div class="order-type">
         <h3>Discover More</h3>
-        <button class="dine-in-button" @click="goToGameInformation">
+        <button class="dine-in-button" @click="goToHandicapInformation">
           Field Info
         </button>
       </div>
+    </div>
     </header>
 
     <div class="container">
@@ -83,7 +85,7 @@
           <h2>MAKANAN BERAT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+              <img src="../assets/icons/nasigoreng.jpg" alt="nasi goreng">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -138,7 +140,31 @@
       </div>
     </div>
 
-      <!-- Modal -->
+      <!-- languange selection modal -->
+      <div v-if="isModalOpen" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Select Language</h2>
+            <span class="close" @click="closeModal">&times;</span>
+          </div>
+          <div class="modal-body">
+            <button :class="{ selectedLang: selectedLanguage === 'English' }" @click="selectLanguage('English')" class="modal-button">
+              <span>English</span>
+              <span v-if="selectedLanguage === 'English'" class="tick">
+                <img src="../assets/icons/check.png" alt="selected" class="tick-icon">
+              </span>
+            </button>
+            <button :class="{ selectedLang: selectedLanguage === 'Indonesia' }" @click="selectLanguage('Indonesia')" class="modal-button">
+              <span>Indonesia</span>
+              <span v-if="selectedLanguage === 'Indonesia'" class="tick">
+                <img src="../assets/icons/check.png" alt="selected" class="tick-icon">
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- food type modal -->
       <div v-if="showModal" class="modal">
         <div class="modal-content">
           <div class="modal-header">
@@ -146,13 +172,17 @@
             <span class="close" @click="showModal = false">&times;</span>
           </div>
           <div class="modal-body">
-            <button :class="{ selected: selectedOption === 'MAKANAN' }" @click="selectOption('MAKANAN')" class="modal-button">
+            <button :class="{ selected: selectedOption === 'MAKANAN' }" @click="selectOption('MAKANAN')" class="modalbot-button">
               <span>MAKANAN</span>
-              <span v-if="selectedOption === 'MAKANAN'" class="tick">&#10003;</span>
+              <span v-if="selectedOption === 'MAKANAN'" class="tickbot">
+                <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
+              </span>
             </button>
-            <button :class="{ selected: selectedOption === 'DRINK' }" @click="selectOption('DRINK')" class="modal-button">
+            <button :class="{ selected: selectedOption === 'DRINK' }" @click="selectOption('DRINK')" class="modalbot-button">
               <span>DRINK</span>
-              <span v-if="selectedOption === 'DRINK'" class="tick">&#10003;</span>
+              <span v-if="selectedOption === 'DRINK'" class="tickbot">
+                <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
+              </span>
             </button>
           </div>
         </div>
@@ -165,40 +195,101 @@ export default {
   name: 'Menu',
   data() {
     return {
+      makananBeratItems: [
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+      ],
+      snackItems:[
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+      ],
+      coldDessertItems:[
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+      ],
+      hotDessertItems:[
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+      ],
+      drinkItems:[
+        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' }, 
+      ],
+
+      isModalOpen: false,
       selectedOption: 'MAKANAN',
+      selectedLanguage: 'English',
       selectedTab: 'MAKANAN BERAT',
       showModal: false,
       showMenu: false,
       showSearch: false,
       menuItems: [],
-      isRestaurantMenu: true
+      isRestaurantMenu: true,
+      isScrolled: false,
     };
   },
-  computed: {
-    makananBeratItems() {
-      return this.menuItems.filter(item => item.type === 'berat');
-    },
-    snackItems() {
-      return this.menuItems.filter(item => item.type === 'snack');
-    },
-    coldDessertItems() {
-      return this.menuItems.filter(item => item.type === 'cold dessert');
-    },
-    hotDessertItems() {
-      return this.menuItems.filter(item => item.type === 'hot dessert');
-    },
-    drinkItems() {
-      return this.menuItems.filter(item => item.type === 'drink');
-    }
-  },
+  // computed: {
+  //   makananBeratItems() {
+  //     return this.menuItems.filter(item => item.type === 'berat')
+  //   },
+  //   snackItems() {
+  //     return this.menuItems.filter(item => item.type === 'snack');
+  //   },
+  //   coldDessertItems() {
+  //     return this.menuItems.filter(item => item.type === 'cold dessert');
+  //   },
+  //   hotDessertItems() {
+  //     return this.menuItems.filter(item => item.type === 'hot dessert');
+  //   },
+  //   drinkItems() {
+  //     return this.menuItems.filter(item => item.type === 'drink');
+  //   }
+  // },
   methods: {
     selectOption(option) {
       this.selectedOption = option;
       this.showModal = false;
       this.scrollToSection(option === 'MAKANAN' ? 'makananBeratSection' : 'drinkSection');
     },
-    goToGameInformation() {
-      this.$router.push({ name: 'GameInfoPage' }); 
+    handleScroll() {
+      const scrollPosition = window.scrollY;
+      this.isScrolled = scrollPosition > 180;      
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+      this.showMenu = false;
+    },
+    selectLanguage(language) {
+      if (language === 'English') {
+        this.$router.push({ name: 'MenuPageEng' });
+      } else {
+        this.$router.push({ name: 'MenuPageInd' });
+      }
+      this.closeModal();
+      this.showMenu = false;
+    },
+    goToHandicapInformation() {
+      this.$router.push({ name: 'HandicapGolfInfoPageEng' }); 
+    },
+    goToAboutPage() {
+      this.$router.push({ name: 'AboutPageEng' }); 
     },
     scrollToSection(section) {
       const sectionMap = {
@@ -212,27 +303,53 @@ export default {
       const sectionRef = this.$refs[section];
       sectionRef.scrollIntoView({ behavior: 'smooth' });
     },
-    fetchMenuItems() {
-      fetch('http://localhost:3000/menu')
-        .then(response => response.json())
-        .then(data => {
-          this.menuItems = data; // Assign fetched data to menuItems
-        })
-        .catch(error => {
-          console.error('There was an error!', error);
-        });
-    },
+    // fetchMenuItems() {
+    //   fetch('http://localhost:3000/menu')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       this.menuItems = data; // Assign fetched data to menuItems
+    //     })
+    //     .catch(error => {
+    //       console.error('There was an error!', error);
+    //     });
+    // },
     toggleMenu() {
       this.showMenu = !this.showMenu;
     }
   },
-  created() {
-    this.fetchMenuItems();
-  }
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
+  // created() {
+  //   this.fetchMenuItems();
+  // }
 }
 </script>
 
 <style scoped>
+.left-text {
+  font-size: 18px;
+  font-weight: bold;
+  flex: 1;
+  text-align: left;
+  padding: 0px 0px 0px 18px;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-scrolled {
+  background-color: white;
+  width: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -245,9 +362,12 @@ header {
   background-color: #f0f0f0; 
   color: black; 
   text-align: center;
-  padding: 10px 20px;
   width: 100%;
   position: relative;
+}
+
+.pad-only {
+  padding: 10px 20px;
 }
 
 .top-bar {
@@ -255,6 +375,7 @@ header {
   justify-content: flex-end; /* Align to the right */
   align-items: center; /* Align items to the center */
   margin-top: 0; /* Remove any margin from the top */
+  padding-right: 20px;
 }
 
 .right-icons {
@@ -621,7 +742,6 @@ header {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
   animation: slide-up 0.3s ease-out; /* Slide up animation */
 }
 
@@ -636,19 +756,20 @@ header {
 
 .modal-content {
   background-color: #fff;
-  padding: 20px;
-  border-radius: 20px; /* Rounded corners */
+  padding: 2px;
+  border-radius: 20px 20px 0px 0px; /* Rounded corners */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 90%; /* Make it wider */
-  max-width: 500px; /* Maximum width */
+  width: 100%; /* Make it wider */
+  max-width: 600px; /* Maximum width */
+  height: 100%;
+  max-height: 235px;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .modal-header h2 {
@@ -690,7 +811,7 @@ button {
 }
 
 button:hover {
-  background-color: transparent; /* Ensure background color does not change on hover */
+  background-color: transparent; 
 }
 
 button.selected {
@@ -698,12 +819,26 @@ button.selected {
   color: white;
 }
 
-.modal-button {
+.modal-button{
   font-size: 18px; /* Increase text size */
   padding: 15px 20px; /* Increase padding */
-  margin: 10px 0; /* Add margin between buttons */
-  border: 1px solid #ccc; /* Add border */
-  border-radius: 5px; /* Add border radius */
+  margin: 5px 0; /* Add margin between buttons */
+  border: none;
+  border-radius: 10px; /* Add border radius */
+  background-color:#fff;
+  cursor: pointer;
+  width: 100%; /* Make button full width */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalbot-button {
+  font-size: 18px; /* Increase text size */
+  padding: 15px 20px; /* Increase padding */
+  margin: 5px 0; /* Add margin between buttons */
+  border: 1px solid #ff7440; /* Add border */
+  border-radius: 10px; /* Add border radius */
   background-color: #fff;
   cursor: pointer;
   width: 100%; /* Make button full width */
@@ -712,18 +847,43 @@ button.selected {
   align-items: center;
 }
 
-.modal-button:hover {
-  background-color: #f0f0f0; /* Change background color on hover */
+.modalbot-button:hover {
+  background-color: #f0f0f0; 
 }
 
-.modal-button.selected {
-  background-color: green;
+.modalbot-button.selected {
+  background-color: #ff7440;
   color: white;
+  border: none;
+}
+
+.tickbot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.tickbot-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .tick {
-  margin-left: auto;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.tick-icon {
+  width: 16px;
+  height: 16px;
 }
 
 .slide-enter-active, .slide-leave-active {

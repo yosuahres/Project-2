@@ -13,25 +13,13 @@
               <div class="menu" v-if="showMenu">
                 <div class="menu-header">
                   <button class="close-menu" @click="toggleMenu">✖</button>
-                  <img src="../assets/icons/logo1 (1).png" alt="Menu Logo" class="menu-logo">
+                  <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
                 </div>
                 <nav class="menu-nav">
                   <div class="menu-item-top">
-                    <a href="/page1">
-                      <img src="#" alt="1" class="menu-icon">
-                      Order History
-                    </a>
-                  </div>
-                  <div class="menu-item-top">
                     <a href="/page2">
-                      <img src="#" alt="2" class="menu-icon">
-                      Languange
-                    </a>
-                  </div>
-                  <div class="menu-item-top">
-                    <a href="/page3">
-                      <img src="#" alt="3" class="menu-icon">
-                      Privacy Policy
+                      <img src="../assets/icons/language.png" alt="2" class="menu-icon">
+                      Bahasa
                     </a>
                   </div>
                 </nav>
@@ -40,36 +28,122 @@
           </div>
         </div>
   
-        <img src="../assets/icons/logo1 (1).png" alt="Header Image" class="header-image">
-        <button class="header-button">
+        <img src="../assets/icons/ip-logo.png" alt="Header Image" class="header-image">
+        <button class="header-button" @click="goToAboutInformation">
           <div class="header-content">
             <h1>Indah Puri</h1>
-            <p>Open today, 06:30-21:15</p>
+            <p>Buka hari ini, 06:30-21:15</p>
           </div>
           <span class="arrow-icon">></span>
         </button>
-
         <div class="order-type">
-          <h3>Discover More</h3>
-          <button class="dine-in-button" @click="goToMenuInformation">
-            Menu Info
+          <h3>Temukan Lebih Banyak</h3>
+          <button class="dine-in-button" @click="goToHandicapInformation">
+            Info lapangan
           </button>
         </div>
-        
       </header>
   
       <div class="container">
-        <div class="media-container">
-          <img src="../assets/icons/handicap.jpeg" alt="handicap" class="media-image" @click="showModal = true">
-          <video autoplay loop muted class="media-video">
-            <source src="../assets/icons/field.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+        <div class="menu-container">
+          <div class="tabs">
+            <button class="dropbtn" @click="showModal = true">
+              <div class="logo">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+              </div>
+              {{ selectedOption }}
+            </button>
+            <div :class="['tab', { active: selectedTab === 'MAKANAN BERAT' }]" @click="scrollToSection('makananBeratSection')">MAKANAN BERAT</div>
+            <div :class="['tab', { active: selectedTab === 'SNACK' }]" @click="scrollToSection('snackSection')">SNACK</div>
+            <div :class="['tab', { active: selectedTab === 'COLD DESSERT' }]" @click="scrollToSection('coldDessertSection')">COLD DESSERT</div>
+            <div :class="['tab', { active: selectedTab === 'HOT DESSERT' }]" @click="scrollToSection('hotDessertSection')">HOT DESSERT</div>
+            <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">DRINK</div>
+          </div>
+          <div class="menu-section">
+            <h2 class="header-with-line">
+              MAKANAN
+              <span class="line"></span>
+            </h2>
+          </div>
+          <div class="menu-section" ref="makananBeratSection">
+            <h2>MAKANAN BERAT</h2>
+            <div class="menu-grid two-columns">
+              <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
+                <img src="../assets/icons/nasigoreng.jpg" alt="nasi goreng">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.price }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="menu-section" ref="snackSection">
+            <h2>SNACK</h2>
+            <div class="menu-grid two-columns">
+              <div v-for="item in snackItems" :key="item.id" class="menu-item">
+                <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.price }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="menu-section">
+            <h2 class="header-with-line">
+              MINUMAN
+              <span class="line"></span>
+            </h2>
+          </div>
+          <div class="menu-section" ref="coldDessertSection">
+            <h2>COLD DESSERT</h2>
+            <div class="menu-grid two-columns">
+              <div v-for="item in coldDessertItems" :key="item.id" class="menu-item">
+                <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.price }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="menu-section" ref="hotDessertSection">
+            <h2>HOT DESSERT</h2>
+            <div class="menu-grid two-columns">
+              <div v-for="item in hotDessertItems" :key="item.id" class="menu-item">
+                <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.price }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="menu-section" ref="drinkSection">
+            <h2>DRINK</h2>
+            <div class="menu-grid two-columns">
+              <div v-for="item in drinkItems" :key="item.id" class="menu-item">
+                <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.price }}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div v-if="showModal" class="modal" @click="showModal = false">
-          <span class="close" @click="showModal = false">&times;</span>
-          <img class="modal-content" src="../assets/icons/handicap.jpeg">
-        </div>
+      </div>
+  
+        <!-- Modal -->
+        <div v-if="showModal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2>Category Item</h2>
+              <span class="close" @click="showModal = false">&times;</span>
+            </div>
+            <div class="modal-body">
+              <button :class="{ selected: selectedOption === 'MAKANAN' }" @click="selectOption('MAKANAN')" class="modal-button">
+                <span>MAKANAN</span>
+                <span v-if="selectedOption === 'MAKANAN'" class="tick">&#10003;</span>
+              </button>
+              <button :class="{ selected: selectedOption === 'DRINK' }" @click="selectOption('DRINK')" class="modal-button">
+                <span>DRINK</span>
+                <span v-if="selectedOption === 'DRINK'" class="tick">&#10003;</span>
+              </button>
+            </div>
+          </div>
       </div>
     </div>
   </template>
@@ -79,41 +153,60 @@
     name: 'Menu',
     data() {
       return {
+        makananBeratItems: [
+          { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
+          { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        ],
+        snackItems:[
+  
+        ],
+        coldDessertItems:[
+  
+        ],
+        hotDessertItems:[
+  
+        ],
+        drinkItems:[
+  
+        ],
+  
         selectedOption: 'MAKANAN',
         selectedTab: 'MAKANAN BERAT',
         showModal: false,
         showMenu: false,
         showSearch: false,
-        showModalz: false,
         menuItems: [],
-        modalImage: '../assets/icons/handicap.jpeg'
+        isRestaurantMenu: true,
       };
     },
-    computed: {
-      makananBeratItems() {
-        return this.menuItems.filter(item => item.type === 'berat');
-      },
-      snackItems() {
-        return this.menuItems.filter(item => item.type === 'snack');
-      },
-      coldDessertItems() {
-        return this.menuItems.filter(item => item.type === 'cold dessert');
-      },
-      hotDessertItems() {
-        return this.menuItems.filter(item => item.type === 'hot dessert');
-      },
-      drinkItems() {
-        return this.menuItems.filter(item => item.type === 'drink');
-      }
-    },
+    // computed: {
+    //   makananBeratItems() {
+    //     return this.menuItems.filter(item => item.type === 'berat')
+    //   },
+    //   snackItems() {
+    //     return this.menuItems.filter(item => item.type === 'snack');
+    //   },
+    //   coldDessertItems() {
+    //     return this.menuItems.filter(item => item.type === 'cold dessert');
+    //   },
+    //   hotDessertItems() {
+    //     return this.menuItems.filter(item => item.type === 'hot dessert');
+    //   },
+    //   drinkItems() {
+    //     return this.menuItems.filter(item => item.type === 'drink');
+    //   }
+    // },
     methods: {
       selectOption(option) {
         this.selectedOption = option;
         this.showModal = false;
         this.scrollToSection(option === 'MAKANAN' ? 'makananBeratSection' : 'drinkSection');
       },
-      goToMenuInformation() {
-        this.$router.push({ name: 'MenuPage' }); 
+      goToHandicapInformation() {
+        this.$router.push({ name: 'HandicapGolfInfoPageInd' }); 
+      },
+      goToAboutInformation() {
+        this.$router.push({ name: 'AboutPageInd' });
       },
       scrollToSection(section) {
         const sectionMap = {
@@ -349,69 +442,12 @@
     color: black;
   }
   
-  .closex {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
   .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .media-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .media-image, .media-video {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-  }
-  
-  .modal {
-    display: flex;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
+    max-width: 480px; 
+    margin: 0 auto;
     width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
   }
-
-  .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
-  .game-info {
-    font-size: 1.2em;
-    color: #333;
-    text-align: center;
-  }
-
+  
   .order-type {
     display: flex;
     justify-content: space-between;
