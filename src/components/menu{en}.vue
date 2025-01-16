@@ -58,9 +58,9 @@
     </div>
     </header>
 
-    <div class="container">
-      <div class="menu-container">
-        <div class="tabs">
+    <!-- <div class="container"> -->
+      <!-- <div class="menu-container "> -->
+        <div class="tabs" :class="{ 'menu-section-scrolled ': isMenuSectionScrolled }">
           <button class="dropbtn" @click="showModal = true">
             <div class="logo">
               <div class="line"></div>
@@ -75,6 +75,8 @@
           <div :class="['tab', { active: selectedTab === 'HOT DESSERT' }]" @click="scrollToSection('hotDessertSection')">HOT DESSERT</div>
           <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">DRINK</div>
         </div>
+
+        <div style="padding: 0px 10px 10px 10px ;">
         <div class="menu-section">
           <h2 class="header-with-line">
             MAKANAN
@@ -85,7 +87,7 @@
           <h2>MAKANAN BERAT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="nasi goreng">
+              <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -95,7 +97,7 @@
           <h2>SNACK</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in snackItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+              <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -111,7 +113,7 @@
           <h2>COLD DESSERT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in coldDessertItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+              <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -121,7 +123,7 @@
           <h2>HOT DESSERT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in hotDessertItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+              <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -131,7 +133,7 @@
           <h2>DRINK</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in drinkItems" :key="item.id" class="menu-item">
-              <img src="../assets/icons/nasigoreng.jpg" alt="Nasi Goreng">
+              <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -139,6 +141,7 @@
         </div>
       </div>
     </div>
+    <!-- </div> -->
 
       <!-- languange selection modal -->
       <div v-if="isModalOpen" class="modal">
@@ -187,7 +190,7 @@
           </div>
         </div>
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -196,38 +199,47 @@ export default {
   data() {
     return {
       makananBeratItems: [
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'Soup Buntut Goreng with Rice', price: 'Rp140.000', image: '../assets/icons/mb-1.jpg' },
+        { id: 2, name: 'Chicken Satay Set', price: 'Rp97.000', image: '../assets/icons/mb-2.jpg' },
+        { id: 3, name: 'Fried Rice Indonesia', price: 'Rp80.000', image: '../assets/icons/mb-3.jpg' },
+        { id: 4, name: 'Sliced Beef with Black Pepper Set', price: 'Rp145.000', image: '../assets/icons/mb-4.jpg' },
+        { id: 5, name: 'Fried Noodle Indonesia', price: 'Rp78.000', image: '../assets/icons/mb-5.jpg' },
+        { id: 6, name: 'Crispy Chicken Wing', price: 'Rp110.000', image: '../assets/icons/mb-6.jpg' },
+        { id: 7, name: 'Chicken Steak', price: 'Rp135.000', image: '../assets/icons/mb-7.jpg' },
+        { id: 8, name: 'Sirloin Steak', price: 'Rp189.000', image: '../assets/icons/mb-8.jpg' },
+        { id: 9, name: 'Fried Noodle with Chicken', price: 'Rp80.000', image: '../assets/icons/mb-9.jpg' },
+        { id: 10, name: 'Tomyam Seafood Set', price: 'Rp110.000', image: '../assets/icons/mb-10.jpg' },
+        { id: 11, name: 'Nasi Kari Ayam', price: 'Rp80.000', image: '../assets/icons/mb-11.jpg' },
+        { id: 12, name: 'Nasi Goreng Ikan Bilis', price: 'Rp100.000', image: '../assets/icons/mb-12.jpg' },
+        { id: 13, name: 'Seafood Noodle Soup', price: 'Rp78.000', image: '../assets/icons/mb-13.jpg' },
+        { id: 14, name: 'Butter Rice With Beef', price: 'Rp117.000', image: '../assets/icons/mb-14.jpg' },
+        { id: 15, name: 'Mixed Omelette and Fries', price: 'Rp88.000', image: '../assets/icons/mb-15.jpg' },
+        { id: 16, name: 'Butter Prawn', price: 'Rp110.000', image: '../assets/icons/mb-16.jpg' },
+        { id: 17, name: 'Nasi Kari Ayam', price: 'Rp80.000', image: '../assets/icons/mb-17.jpg' },
+        { id: 18, name: 'Nasi Goreng Ikan Bilis', price: 'Rp100.000', image: '../assets/icons/mb-18.jpg' },
+        { id: 19, name: 'Seafood Noodle Soup', price: 'Rp78.000', image: '../assets/icons/mb-19.jpg' },
+        { id: 20, name: 'Butter Rice With Beef', price: 'Rp117.000', image: '../assets/icons/mb-20.jpg' },
+        { id: 21, name: 'Mixed Omelette and Fries', price: 'Rp88.000', image: '../assets/icons/mb-21.jpg' },
+        { id: 22, name: 'Butter Prawn', price: 'Rp110.000', image: '../assets/icons/mb-22.jpg' },
+        { id: 23, name: 'Oxtail Soup with Rice', price: 'Rp140.000', image: '../assets/icons/mb-23.jpg' },
+        { id: 24, name: 'Fish n Chip with Vegetable', price: 'Rp161.000', image: '../assets/icons/mb-24.jpg' },
+        { id: 25, name: 'Fried Hokkien Mie', price: 'Rp88.000', image: '../assets/icons/mb-25.jpg' },
+        { id: 26, name: 'Nasi Ikan Sambal', price: 'Rp117.000', image: '../assets/icons/mb-26.jpg' },
       ],
       snackItems:[
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/sc-1.jpg' },
       ],
       coldDessertItems:[
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 1, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/cd-1.jpg' },
       ],
       hotDessertItems:[
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' },
+        { id: 26, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/hd-1.jpg' },
       ],
       drinkItems:[
-        { id: 1, name: 'Nasi Goreng', price: '10.00', image: '../assets/icons/nasigoreng.jpg' },
-        { id: 2, name: 'Mie Goreng', price: '8.00', image: '../assets/icons/miegoreng.jpg' }, 
+        { id: 1, name: 'Espresso', price: 'Rp15.000', image: '../assets/icons/dr-1.jpg' },
+        { id: 2, name: 'Cappucino', price: 'Rp30.000', image: '../assets/icons/dr-2.jpg' },
+        { id: 3, name: 'Americano', price: 'Rp25.000', image: '../assets/icons/dr-3.jpg' },
+        { id: 4, name: 'Coffee Latte', price: 'Rp25.000', image: '../assets/icons/dr-4.jpg' },
       ],
 
       isModalOpen: false,
@@ -240,6 +252,7 @@ export default {
       menuItems: [],
       isRestaurantMenu: true,
       isScrolled: false,
+      isMenuSectionScrolled: false,
     };
   },
   // computed: {
@@ -267,7 +280,13 @@ export default {
     },
     handleScroll() {
       const scrollPosition = window.scrollY;
-      this.isScrolled = scrollPosition > 180;      
+      this.isScrolled = scrollPosition > 150;  
+      
+      const menuSection = this.$refs.makananBeratSection;
+      if (menuSection) {
+        const menuSectionTop = menuSection.getBoundingClientRect().top;
+        this.isMenuSectionScrolled = menuSectionTop <=  160 ;
+      }
     },
     openModal() {
       this.isModalOpen = true;
@@ -330,6 +349,10 @@ export default {
 </script>
 
 <style scoped>
+html {
+  scroll-behavior: smooth;
+}
+
 .left-text {
   font-size: 18px;
   font-weight: bold;
@@ -339,10 +362,20 @@ export default {
 }
 
 .sticky-header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 1000;
-  transition: all 0.3s ease;
+  left: 0;
+  width: 100%;
+  overflow-y: auto; 
+  z-index: 1000; 
+}
+
+.menu-section-scrolled {
+  position: fixed;
+  top: 60px; /* Adjust based on your header height */
+  width: 100%;
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-scrolled {
@@ -367,7 +400,7 @@ header {
 }
 
 .pad-only {
-  padding: 10px 20px;
+  padding: 30px 20px 10px 20px;
 }
 
 .top-bar {
@@ -555,12 +588,6 @@ header {
   color: black;
 }
 
-.container {
-  max-width: 480px; 
-  margin: 0 auto;
-  width: 100%;
-}
-
 .order-type {
   display: flex;
   justify-content: space-between;
@@ -604,21 +631,26 @@ header {
 }
 
 .menu-container {
-  background-color: #ffffff;
-  padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; 
+  box-sizing: border-box;
+  flex-grow: 1;
+  background-color: red;
 }
 
 .tabs {
+  padding: 5px 5px 0px 5px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin: 10px 0;
+  margin: 0px 10px auto auto; 
   background-color: #fff;
   border-radius: 5px;
   width: 100%;
+  max-width: 1200px; 
   overflow-x: auto;
 }
 
@@ -626,7 +658,7 @@ header {
   background-color: #fff;
   color: black;
   padding: 10px;
-  font-size: 12px; /* Adjusted text size */
+  font-size: 12px; 
   border: none;
   cursor: pointer;
   display: flex;
@@ -653,7 +685,7 @@ header {
   cursor: pointer;
   margin-bottom: 5px;
   white-space: nowrap;
-  font-size: 13px; /* Adjusted text size */
+  font-size: 13px; 
 }
 
 .tab.active {
@@ -684,12 +716,12 @@ header {
 
 .menu-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Single column for mobile look */
+  grid-template-columns: 1fr; 
   gap: 15px;
 }
 
 .menu-grid.two-columns {
-  grid-template-columns: 1fr 1fr; /* Two columns for food list */
+  grid-template-columns: 1fr 1fr; 
 }
 
 .menu-item {
@@ -697,7 +729,7 @@ header {
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  text-align: left;
   width: 100%;
 }
 
@@ -707,14 +739,15 @@ header {
 }
 
 .menu-item h3 {
-  margin: 10px 0 5px;
-  font-size: 12px; /* Adjusted text size */
+  margin: 10px 0;
+  font-size: 14px; /* Adjusted text size */
+  font-weight: bold;
 }
 
 .menu-item p {
-  color: gray;
-  font-size: 10px; /* Adjusted text size */
-  margin: 5px 0;
+  color: black;
+  font-size: 14px; /* Adjusted text size */
+  margin: 20px 0 5px 0;
 }
 
 .menu-item button {

@@ -25,7 +25,7 @@
               </button>
               <button class="visit-btn" @click="visitOutlet">
                 <img src="../assets/icons/map.png" alt="visit" class="button-icon">
-                Visit us
+                Google Maps
               </button>
             </div>
           </div>

@@ -21,7 +21,7 @@
             <div class="buttons">
               <button class="call-btn" @click="contactOutlet">
                 <img src="../assets/icons/telephone.png" alt="call" class="button-icon"> 
-                Hubungi kami
+                Hubungi Kami
               </button>
               <button class="visit-btn" @click="visitOutlet">
                 <img src="../assets/icons/map.png" alt="visit" class="button-icon">
@@ -36,28 +36,28 @@
 
       <!-- Operational Hours -->
       <div class="hours">
-        <h2>Operational Hours</h2>
+        <h2>Jam Operasional</h2>
         <ul class="p-0">
           <li class="gapping">
-            <span class="day">MONDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">SENIN</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">TUESDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">SELASA</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">WEDNESDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">RABU</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">THURSDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">KAMIS</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">FRIDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">JUMAT</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">SATURDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">SABTU</span> <span class="time">06:00 - 19.00</span>
           </li>
           <li class="gapping">
-            <span class="day">SUNDAY</span> <span class="time">06:30 - 21:15</span>
+            <span class="day">MINGGU</span> <span class="time">06:00 - 19.00</span>
           </li>
         </ul>
       </div>
@@ -69,13 +69,13 @@
 export default {
   methods: {
     contactOutlet() {
-      window.location.href = "tel:+628161414784";
+      window.location.href = "tel:+6281363315569";
     },
     visitOutlet() {
       window.open("https://maps.app.goo.gl/tmX3jqhw1aKVBe5M7", "_blank");
     },
     goBack() {
-      this.$router.push({ name: 'MenuPageInd' }); 
+      this.$router.push({ name: 'MenuPageEng' }); 
     },
   },
 };
@@ -83,7 +83,7 @@ export default {
 
 <style scoped>
 .gapping {
-  padding: 15px; 
+  padding: 20px; 
 }
 
 .separator {
