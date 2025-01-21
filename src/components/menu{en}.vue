@@ -63,6 +63,8 @@
 
     <!-- <div class="container"> -->
       <!-- <div class="menu-container "> -->
+        <div style="display: flex; justify-content: center;">
+          <div style="width: 100%; max-width: 600px;">
         <div class="tabs" :class="{ 'menu-section-scrolled ': isMenuSectionScrolled }">
           <button class="dropbtn" @click="showModal = true">
             <div class="logo">
@@ -78,8 +80,11 @@
           <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">DRINK</div>
           <div :class="['tab', { active: selectedTab === 'CIGARETTE' }]" @click="scrollToSection('cigaretteSection')">CIGARETTE</div>
         </div>
+        </div>  
+      </div>
 
-        <div style="padding: 0px 10px 10px 10px ;">
+        <div style="display: flex; justify-content: center;">
+        <div style="padding: 0px 10px 10px 10px; width: 100%; max-width: 600px;">
         <div class="menu-section">
           <h2 class="header-with-line">
             FOODS
@@ -152,6 +157,7 @@
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
     <!-- </div> -->
