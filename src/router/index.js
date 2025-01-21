@@ -7,6 +7,9 @@ import AboutPageInd from '../components/about{id}.vue';
 import AboutPageEng from '../components/about{en}.vue';
 
 const routes = [
+  // Root route redirecting to English menu page
+  { path: '/', redirect: '/en/menu' },
+
   // English routes
   { path: '/en/menu', name: 'MenuPageEng', component: MenuPageEng },
   { path: '/en/handicap-golf-fields', name: 'HandicapGolfInfoPageEng', component: HandicapGolfInfoPageEng },
