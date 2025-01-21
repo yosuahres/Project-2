@@ -430,7 +430,8 @@
   }
   
   .media-image, .media-video {
-    max-width: 100%;
+    width: 100%;
+    max-width: 600px;
     height: auto;
     margin-bottom: 10px;
     border-radius: 10px;
