@@ -5,15 +5,15 @@
       <div class="top-bar">
 
         <!-- header for scrolled -->
-        <div class="left-text" v-if="isScrolled">
+        <div class="left-text background-icon" v-if="isScrolled">
           Indah Puri
         </div>
         <!-- end -->
 
         <div class="right-icons">
-          <button class="search-icon" @click="showSearch = !showSearch">
+          <!-- <button class="search-icon" @click="showSearch = !showSearch">
             <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
-          </button>
+          </button> -->
           <button class="menu-button" @click="toggleMenu">  
             ☰
           </button> 
@@ -41,6 +41,7 @@
     </div>
 
     <div class="pad-only">
+
       <img src="../assets/icons/ip-logo.png" alt="Header Image" class="header-image">
       <button class="header-button" @click="goToAboutPage">
         <div class="header-content">
@@ -49,12 +50,14 @@
         </div>
         <span class="arrow-icon">></span>
       </button>
+
       <div class="order-type">
         <h3>Discover More</h3>
         <button class="dine-in-button" @click="goToHandicapInformation">
           Field Info
         </button>
       </div>
+
     </div>
     </header>
 
@@ -69,22 +72,22 @@
             </div>
             {{ selectedOption }}
           </button>
-          <div :class="['tab', { active: selectedTab === 'MAKANAN BERAT' }]" @click="scrollToSection('makananBeratSection')">MAKANAN BERAT</div>
+          <div :class="['tab', { active: selectedTab === 'MAKANAN BERAT' }]" @click="scrollToSection('makananBeratSection')">HEAVY FOOD</div>
           <div :class="['tab', { active: selectedTab === 'SNACK' }]" @click="scrollToSection('snackSection')">SNACK</div>
-          <div :class="['tab', { active: selectedTab === 'COLD DESSERT' }]" @click="scrollToSection('coldDessertSection')">COLD DESSERT</div>
-          <div :class="['tab', { active: selectedTab === 'HOT DESSERT' }]" @click="scrollToSection('hotDessertSection')">HOT DESSERT</div>
+          <div :class="['tab', { active: selectedTab === 'DESSERT' }]" @click="scrollToSection('dessertSection')">DESSERT</div>
           <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">DRINK</div>
+          <div :class="['tab', { active: selectedTab === 'CIGARETTE' }]" @click="scrollToSection('cigaretteSection')">CIGARETTE</div>
         </div>
 
         <div style="padding: 0px 10px 10px 10px ;">
         <div class="menu-section">
           <h2 class="header-with-line">
-            MAKANAN
+            FOODS
             <span class="line"></span>
           </h2>
         </div>
         <div class="menu-section" ref="makananBeratSection">
-          <h2>MAKANAN BERAT</h2>
+          <h2>HEAVY FOOD</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
               <img :src="item.image" :alt="item.name">
@@ -105,12 +108,12 @@
         </div>
         <div class="menu-section">
           <h2 class="header-with-line">
-            MINUMAN
+            DRINKS
             <span class="line"></span>
           </h2>
         </div>
-        <div class="menu-section" ref="coldDessertSection">
-          <h2>COLD DESSERT</h2>
+        <div class="menu-section" ref="dessertSection">
+          <h2>DESSERT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in coldDessertItems" :key="item.id" class="menu-item">
               <img :src="item.image" :alt="item.name">
@@ -119,8 +122,8 @@
             </div>
           </div>
         </div>
-        <div class="menu-section" ref="hotDessertSection">
-          <h2>HOT DESSERT</h2>
+        <!-- <div class="menu-section" ref="hotDessertSection">
+          <h2>HOT DESSERT</h2>  
           <div class="menu-grid two-columns">
             <div v-for="item in hotDessertItems" :key="item.id" class="menu-item">
               <img :src="item.image" :alt="item.name">
@@ -128,11 +131,21 @@
               <p>{{ item.price }}</p>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="menu-section" ref="drinkSection">
           <h2>DRINK</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in drinkItems" :key="item.id" class="menu-item">
+              <img :src="item.image" :alt="item.name">
+              <h3>{{ item.name }}</h3>
+              <p>{{ item.price }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="menu-section" ref="cigaretteSection">
+          <h2>CIGARETTE</h2>
+          <div class="menu-grid two-columns">
+            <div v-for="item in cigaretteItems" :key="item.id" class="menu-item">
               <img :src="item.image" :alt="item.name">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
@@ -176,7 +189,7 @@
           </div>
           <div class="modal-body">
             <button :class="{ selected: selectedOption === 'MAKANAN' }" @click="selectOption('MAKANAN')" class="modalbot-button">
-              <span>MAKANAN</span>
+              <span>FOOD</span>
               <span v-if="selectedOption === 'MAKANAN'" class="tickbot">
                 <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
               </span>
@@ -225,21 +238,245 @@ export default {
         { id: 24, name: 'Fish n Chip with Vegetable', price: 'Rp161.000', image: '../assets/icons/mb-24.jpg' },
         { id: 25, name: 'Fried Hokkien Mie', price: 'Rp88.000', image: '../assets/icons/mb-25.jpg' },
         { id: 26, name: 'Nasi Ikan Sambal', price: 'Rp117.000', image: '../assets/icons/mb-26.jpg' },
+
+        // bread/roti
+        { id: 27, name: 'American Breakfast', price: 'Rp104.000', image: '../assets/icons/mb-27.jpg' },
+        { id: 28, name: 'Tuna Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-28.jpg' },
+        { id: 29, name: 'Cheese French Toast', price: 'Rp78.000', image: '../assets/icons/mb-29.jpg' },
+        { id: 30, name: 'Egg Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-30.jpg' },
+        { id: 31, name: 'French Toast Kaya', price: 'Rp56.000', image: '../assets/icons/mb-31.jpg' },
+        { id: 32, name: 'Roti Prata With Kari Ayam', price: 'Rp79.000', image: '../assets/icons/mb-32.jpg' },
+        { id: 33, name: 'Mix Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-33.jpg' },
+        { id: 34, name: 'Tuna French Toast', price: 'Rp49.000', image: '../assets/icons/mb-34.jpg' },
+        { id: 35, name: 'Chicken French Toast', price: 'Rp49.000', image: '../assets/icons/mb-35.jpg' },
+        { id: 36, name: 'Rissole', price: 'Rp41.000', image: '../assets/icons/mb-36.jpg' },
+        { id: 37, name: 'Prata Gula', price: 'Rp41.000', image: '../assets/icons/mb-37.jpg' },
+        { id: 38, name: 'Prata Kosong', price: 'Rp37.000', image: '../assets/icons/mb-38.jpg' },
+        { id: 38, name: 'Toas Kaya', price: 'Rp37.000', image: '../assets/icons/mb-38.jpg' },
+        { id: 38, name: 'Chicken Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-38.jpg' },
+        { id: 38, name: 'Cheese Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-38.jpg' },
+
+        // Rice/nasi
+        { id: 39, name: 'Nasi Ayam Penyet', price: 'Rp90.000', image: '../assets/icons/mb-39.jpg' },
+        { id: 40, name: 'Nasi Kari Ayam', price: 'Rp124.000', image: '../assets/icons/mb-40.jpg' },
+        { id: 41, name: 'Chicken Garlic Rice', price: 'Rp110.000', image: '../assets/icons/mb-41.jpg' },
+        { id: 42, name: 'Butter Rice With Beef', price: 'Rp117.000', image: '../assets/icons/mb-42.jpg' },
+        { id: 43, name: 'Nasi Ikan Sambal', price: 'Rp117.000', image: '../assets/icons/mb-43.jpg' },
+        { id: 44, name: 'Nasi Putih', price: 'Rp12.000', image: '../assets/icons/mb-44.jpg' },
+
+        // NASI GORENG/FRIED RICE
+        { id: 45, name: 'Nasi Goreng + Oxtail Soup', price: 'Rp140.000', image: '../assets/icons/mb-45.jpg' },
+        { id: 46, name: 'Nasi Goreng Indah', price: 'Rp80.000', image: '../assets/icons/mb-46.jpg' },
+        { id: 47, name: 'Nasi Goreng Ikan Bilis', price: 'Rp80.000', image: '../assets/icons/mb-47.jpg' },
+        { id: 48, name: 'Corned Beef Fried Chicken', price: 'Rp80.000', image: '../assets/icons/mb-48.jpg' },
+        { id: 49, name: 'Nasi Goreng Indonesia', price: 'Rp80.000', image: '../assets/icons/mb-49.jpg' },
+        { id: 50, name: 'Nasi Goreng Seafood', price: 'Rp80.000', image: '../assets/icons/mb-50.jpg' },
+        { id: 51, name: 'Nasi Goreng Oriental', price: 'Rp80.000', image: '../assets/icons/mb-51.jpg' },
+        { id: 52, name: 'Nasi Goreng Ikan Asin', price: 'Rp80.000', image: '../assets/icons/mb-52.jpg' },
+        { id: 53, name: 'Oxtail Fried Rice', price: 'Rp104.000', image: '../assets/icons/mb-53.jpg' },
+
+        // MIE/NOODLES
+        { id: 54, name: 'Mie Goreng Jawa', price: 'Rp72.000', image: '../assets/icons/mb-54.jpg' },
+        { id: 55, name: 'Mie Goreng Indonesia', price: 'Rp78.000', image: '../assets/icons/mb-55.jpg' },
+        { id: 56, name: 'Horfun Black Paper', price: 'Rp98.000', image: '../assets/icons/mb-56.jpg' },
+        { id: 57, name: 'Fried Bihun Seafood', price: 'Rp88.000', image: '../assets/icons/mb-57.jpg' },
+        { id: 58, name: 'Fried Hokkien Mie', price: 'Rp88.000', image: '../assets/icons/mb-58.jpg' },
+        { id: 59, name: 'Seafood Noodle Soup', price: 'Rp78.000', image: '../assets/icons/mb-59.jpg' },
+        { id: 60, name: 'Horfun', price: 'Rp41.000', image: '../assets/icons/mb-60.jpg' },
+        { id: 61, name: 'Kwetiau Soup', price: 'Rp97.000', image: '../assets/icons/mb-61.jpg' },
+        { id: 62, name: 'F.beef Noodle/Kwetiau', price: 'Rp98.000', image: '../assets/icons/mb-62.jpg' },
+        { id: 63, name: 'Mee Ayam', price: 'Rp41.000', image: '../assets/icons/mb-63.jpg' },
+        { id: 64, name: 'Bihun Soup', price: 'Rp78.000', image: '../assets/icons/mb-64.jpg' },
+        { id: 65, name: 'Oxtail Soup 60k', price: 'Rp70.000', image: '../assets/icons/mb-65.jpg' },
+
+        // BEEF, CHICKEN, PRAWN & FISH
+        { id: 66, name: 'Chicken Teriyaki Set', price: 'Rp101.000', image: '../assets/icons/mb-66.jpg' },
+        { id: 67, name: 'Chicken Satay Set', price: 'Rp97.000', image: '../assets/icons/mb-67.jpg' },
+        { id: 68, name: 'Chicken Ginger Set', price: 'Rp101.000', image: '../assets/icons/mb-68.jpg' },
+        { id: 69, name: 'Chicken Lemon Sauce Set', price: 'Rp104.000', image: '../assets/icons/mb-69.jpg' },
+        { id: 70, name: 'Beef Ginger Set', price: 'Rp115.000', image: '../assets/icons/mb-70.jpg' },
+        { id: 71, name: 'Chicken Dried Chili Set', price: 'Rp94.000', image: '../assets/icons/mb-71.jpg' },
+        { id: 72, name: 'Chicken Butter', price: 'Rp101.000', image: '../assets/icons/mb-72.jpg' },
+        { id: 73, name: 'Chicken Bbq Set', price: 'Rp101.000', image: '../assets/icons/mb-73.jpg' },
+        { id: 74, name: 'Butter Prawn', price: 'Rp110.000', image: '../assets/icons/mb-74.jpg' },
+        { id: 75, name: 'Black Pepper Beef Set', price: 'Rp145.000', image: '../assets/icons/mb-75.jpg' },
+        { id: 76, name: 'Thai Honey Chicken Set', price: 'Rp61.000', image: '../assets/icons/mb-76.jpg' },
+        { id: 77, name: 'Butter Prawn In Gold Net', price: 'Rp110.000', image: '../assets/icons/mb-77.jpg' },
+        { id: 78, name: 'F.Chicken', price: 'Rp190.000', image: '../assets/icons/mb-78.jpg' },
+        { id: 79, name: 'Ayam Goreng Bawang', price: 'Rp127.000', image: '../assets/icons/mb-79.jpg' },
+        { id: 80, name: 'Chicken Mongolian With Rice', price: 'Rp81.000', image: '../assets/icons/mb-80.jpg' },
+        { id: 81, name: 'Beef Mongolian With Rice', price: 'Rp110.000', image: '../assets/icons/mb-81.jpg' },
+        { id: 82, name: 'Prawn Mongolian With Rice', price: 'Rp110.000', image: '../assets/icons/mb-82.jpg' },
+
+        { id: 83, name: "Chicken Porridge", price: "Rp70.000", image: "../assets/icons/mb-83.jpg" },
+        { id: 84, name: "Fish Porridge", price: "Rp70.000", image: "../assets/icons/mb-84.jpg" },
+        { id: 85, name: "Sea Food Porridge", price: "Rp70.000", image: "../assets/icons/mb-85.jpg" },
+        { id: 86, name: "Tomyam Seafood Set", price: "Rp110.000", image: "../assets/icons/mb-86.jpg" },
+        { id: 87, name: "Fish Soup Set", price: "Rp110.000", image: "../assets/icons/mb-87.jpg" },
+        { id: 88, name: "Oxtail Soup Set", price: "Rp140.000", image: "../assets/icons/mb-88.jpg" },
+        { id: 89, name: "Sop Buntut Goreng Set", price: "Rp140.000", image: "../assets/icons/mb-89.jpg" },
+        { id: 90, name: "Soup Seafood Set", price: "Rp86.000", image: "../assets/icons/mb-90.jpg" },
+        { id: 91, name: "Soup Chicken Set", price: "Rp86.000", image: "../assets/icons/mb-91.jpg" },
+        { id: 92, name: "1000 Salad", price: "Rp61.000", image: "../assets/icons/mb-92.jpg" },
+        { id: 93, name: "Sop Buntut 80", price: "Rp80.000", image: "../assets/icons/mb-93.jpg" },
+        { id: 94, name: "Hot Plate Topu", price: "Rp92.000", image: "../assets/icons/mb-94.jpg" },
+        { id: 95, name: "Sirloin Steak", price: "Rp189.000", image: "../assets/icons/mb-95.jpg" },
+        { id: 96, name: "Black Pepper Steak", price: "Rp233.000", image: "../assets/icons/mb-96.jpg" },
+        { id: 97, name: "Tenderloin Steak", price: "Rp233.000", image: "../assets/icons/mb-97.jpg" },
+        { id: 98, name: "Chicken Steak", price: "Rp135.000", image: "../assets/icons/mb-98.jpg" },
+        { id: 99, name: "Fish 'n' Chips", price: "Rp161.000", image: "../assets/icons/mb-99.jpg" },
+        { id: 100, name: "Mixed Omelette & Fries", price: "Rp88.000", image: "../assets/icons/mb-100.jpg" },
+        { id: 101, name: "Scramble Egg & Toast", price: "Rp88.000", image: "../assets/icons/mb-101.jpg" },
+        { id: 102, name: "Fried Egg (Double)", price: "Rp19.000", image: "../assets/icons/mb-102.jpg" },
+        { id: 103, name: "Hard/Half Boiled Egg", price: "Rp19.000", image: "../assets/icons/mb-103.jpg" },
+        { id: 104, name: "Cheese Omelette", price: "Rp81.000", image: "../assets/icons/mb-104.jpg" },
+        { id: 105, name: "Mushroom Omelette", price: "Rp81.000", image: "../assets/icons/mb-105.jpg" },
+        { id: 106, name: "Fried Egg With Onion", price: "Rp25.000", image: "../assets/icons/mb-106.jpg" },
+        { id: 107, name: "Fried Rice Vegetable", price: "Rp73.000", image: "../assets/icons/mb-107.jpg" },
+        { id: 108, name: "Fried Noodle Vegetable", price: "Rp73.000", image: "../assets/icons/mb-108.jpg" },
+        { id: 109, name: "Fried Bihoun Vegetable", price: "Rp73.000", image: "../assets/icons/mb-109.jpg" },
+        { id: 110, name: "Broccoli Mushroom", price: "Rp73.000", image: "../assets/icons/mb-110.jpg" },
+        { id: 111, name: "Capcai", price: "Rp73.000", image: "../assets/icons/mb-111.jpg" },
+        { id: 112, name: "Mix Vegetable", price: "Rp73.000", image: "../assets/icons/mb-112.jpg" },
+        { id: 113, name: "Soup Vegetable", price: "Rp73.000", image: "../assets/icons/mb-113.jpg" },
+        { id: 114, name: "Sauteed Beansprout With Fish Salted", price: "Rp66.000", image: "../assets/icons/mb-114.jpg" },
+
+        // NOODLE
+        { id: 115, name: "Miso Ramen Chicken", price: "Rp122.000", image: "../assets/icons/mb-115.jpg" },
+        { id: 116, name: "Miso Ramen Beef", price: "Rp140.000", image: "../assets/icons/mb-116.jpg" },
+        { id: 117, name: "Chicken Gyoza", price: "Rp82.000", image: "../assets/icons/mb-117.jpg" },
+        { id: 118, name: "Beef Gyoza", price: "Rp88.000", image: "../assets/icons/mb-118.jpg" },
+        { id: 119, name: "Chicken Teriyaki", price: "Rp105.000", image: "../assets/icons/mb-119.jpg" },
+        { id: 120, name: "Yaki Udon Seafood", price: "Rp83.000", image: "../assets/icons/mb-120.jpg" },
+        { id: 121, name: "Udon Soup Seafood", price: "Rp83.000", image: "../assets/icons/mb-121.jpg" },
+        { id: 122, name: "Yaki Udon With Beef", price: "Rp89.000", image: "../assets/icons/mb-122.jpg" },
+        { id: 123, name: "Korea Noodle + Plain Rice", price: "Rp140.000", image: "../assets/icons/mb-123.jpg" },
+
       ],
       snackItems:[
-        { id: 1, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/sc-1.jpg' },
+        { id: 1, name: "Grilled Sausage 6 Pcs", price: "Rp94.000", image: "../assets/icons/mb-115.jpg" },
+        { id: 2, name: "Deep Fried Sotong Ball", price: "Rp94.000", image: "../assets/icons/mb-116.jpg" },
+        { id: 3, name: "Vegetable Spring Roll", price: "Rp94.000", image: "../assets/icons/mb-117.jpg" },
+        { id: 4, name: "Crispy Chicken Wing", price: "Rp110.000", image: "../assets/icons/mb-118.jpg" },
+        { id: 5, name: "Stir Fried Ikan Bilis Nut", price: "Rp81.000", image: "../assets/icons/mb-119.jpg" },
+        { id: 6, name: "French Fries", price: "Rp56.000", image: "../assets/icons/mb-120.jpg" },
+        { id: 7, name: "Chicken Curry Puff", price: "Rp22.000", image: "../assets/icons/mb-121.jpg" },
+        { id: 8, name: "Emping", price: "Rp37.000", image: "../assets/icons/mb-122.jpg" },
+        { id: 9, name: "Prawn Cracker", price: "Rp37.000", image: "../assets/icons/mb-123.jpg" },
+        { id: 10, name: "Fried Banana", price: "Rp41.000", image: "../assets/icons/mb-124.jpg" },
+        { id: 11, name: "Sotong Goreng Tepung", price: "Rp98.000", image: "../assets/icons/mb-125.jpg" },
+        { id: 12, name: "Samosa", price: "Rp56.000", image: "../assets/icons/mb-126.jpg" },
+        { id: 13, name: "Kerupuk", price: "Rp37.000", image: "../assets/icons/mb-127.jpg" },
+        { id: 14, name: "Jeker", price: "Rp37.000", image: "../assets/icons/mb-128.jpg" },
+        { id: 15, name: "Soy Joy", price: "Rp15.000", image: "../assets/icons/mb-129.jpg" },
       ],
       coldDessertItems:[
-        { id: 1, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/cd-1.jpg' },
+        { id: 1, name: 'Cornetto Disc Chocolate', price: 'Rp20.000', image: '../assets/icons/cd-1.jpg' },
+        { id: 2, name: 'Magnum Almond', price: 'Rp30.000', image: '../assets/icons/cd-2.jpg' },
+        { id: 3, name: 'Magnum Classic', price: 'Rp30.000', image: '../assets/icons/cd-3.jpg' },
+        { id: 4, name: 'Magnum Strawberry', price: 'Rp30.000', image: '../assets/icons/cd-4.jpg' },
+        { id: 5, name: 'Magnum Gold', price: 'Rp30.000', image: '../assets/icons/cd-5.jpg' },
+        { id: 6, name: 'Paddle Pop Choco Magma', price: 'Rp12.000', image: '../assets/icons/cd-6.jpg' },
+        { id: 7, name: 'Paddle Pop Cola Fire', price: 'Rp12.000', image: '../assets/icons/cd-7.jpg' },
+        { id: 8, name: 'Populaire Strawberry', price: 'Rp12.000', image: '../assets/icons/cd-8.jpg' },
+        { id: 9, name: 'Populaire Chocolate', price: 'Rp12.000', image: '../assets/icons/cd-9.jpg' },
+
+        { id: 25, name: "Melon Fruit", price: "Rp38.000", image: "../assets/icons/mb-139.jpg" },
+        { id: 26, name: "Papaya Fruit", price: "Rp38.000", image: "../assets/icons/mb-140.jpg" },
+        { id: 27, name: "Apple Fruit", price: "Rp38.000", image: "../assets/icons/mb-141.jpg" },
+        { id: 28, name: "Pineapple Fruit", price: "Rp38.000", image: "../assets/icons/mb-142.jpg" },
+        { id: 29, name: "Mixed Fruit", price: "Rp38.000", image: "../assets/icons/mb-143.jpg" },
+        { id: 30, name: "Water Melon Fruit", price: "Rp44.000", image: "../assets/icons/mb-144.jpg" },
       ],
-      hotDessertItems:[
-        { id: 26, name: 'kosong', price: 'Rp117.000', image: '../assets/icons/hd-1.jpg' },
+      cigaretteItems: [
+        { id: 1, name: 'GP Filter Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-1.jpg' },
+        { id: 2, name: 'Sampoerna Green Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-2.jpg' },
+        { id: 3, name: 'Sampoerna Red Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-3.jpg' },
+        { id: 4, name: 'Lighter', price: 'Rp10.000', image: '../assets/icons/cig-4.jpg' },
+        { id: 5, name: 'Marlboro Red Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-5.jpg' },
+        { id: 6, name: 'Marlboro Light Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-6.jpg' },
+        { id: 7, name: 'Marlboro Green Light (Menthol)', price: 'Rp55.000', image: '../assets/icons/cig-7.jpg' },
+        { id: 8, name: 'Marlboro Green Black Cigarette', price: 'Rp55.000', image: '../assets/icons/cig-8.jpg' }
       ],
       drinkItems:[
+        // Coffee
         { id: 1, name: 'Espresso', price: 'Rp15.000', image: '../assets/icons/dr-1.jpg' },
         { id: 2, name: 'Cappucino', price: 'Rp30.000', image: '../assets/icons/dr-2.jpg' },
         { id: 3, name: 'Americano', price: 'Rp25.000', image: '../assets/icons/dr-3.jpg' },
         { id: 4, name: 'Coffee Latte', price: 'Rp25.000', image: '../assets/icons/dr-4.jpg' },
+
+        // Juice
+        { id: 5, name: 'Orange Juice/Kalimantan Juice', price: 'Rp48.000', image: '../assets/icons/dr-5.jpg' },
+        { id: 6, name: 'Melon Juice', price: 'Rp48.000', image: '../assets/icons/dr-6.jpg' },
+        { id: 7, name: 'Green Apple Juice', price: 'Rp48.000', image: '../assets/icons/dr-7.jpg' },
+        { id: 8, name: 'Pineaple Juice', price: 'Rp37.000', image: '../assets/icons/dr-8.jpg' },
+        { id: 9, name: 'Water Melon Juice', price: 'Rp37.000', image: '../assets/icons/dr-9.jpg' },
+        { id: 10, name: 'Carrot Juice', price: 'Rp48.000', image: '../assets/icons/dr-10.jpg' },
+        { id: 11, name: 'Avocado Juice', price: 'Rp48.000', image: '../assets/icons/dr-11.jpg' },
+        { id: 12, name: 'Lime Juice', price: 'Rp39.000', image: '../assets/icons/dr-12.jpg' },
+        { id: 13, name: 'Lemon Juice', price: 'Rp39.000', image: '../assets/icons/dr-13.jpg' },
+        { id: 14, name: 'Mixed Fruit Juice', price: 'Rp48.000', image: '../assets/icons/dr-14.jpg' },
+        { id: 15, name: 'Papaya Juice', price: 'Rp48.000', image: '../assets/icons/dr-15.jpg' },
+        { id: 16, name: 'Ice Kacang', price: 'Rp48.000', image: '../assets/icons/dr-16.jpg' },
+        { id: 17, name: 'Ice Longan', price: 'Rp48.000', image: '../assets/icons/dr-17.jpg' },
+        { id: 18, name: 'Ice Cendol', price: 'Rp48.000', image: '../assets/icons/dr-18.jpg' },
+        { id: 19, name: 'Ice Cincau', price: 'Rp32.000', image: '../assets/icons/dr-19.jpg' },
+        
+        // Softdrink
+        { id: 20, name: 'Pocari Sweat (Bottle) @ 500 ml', price: 'Rp35.000', image: '../assets/icons/dr-20.jpg' },
+        { id: 21, name: 'Pocari Sweat (Can) @ 330 ml', price: 'Rp30.000', image: '../assets/icons/dr-21.jpg' },
+        { id: 22, name: '100 Plus Can @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-22.jpg' },
+        { id: 23, name: 'Coke zero or Diet Coke @ 330 ml', price: 'Rp25.000', image: '../assets/icons/dr-23.jpg' },
+        { id: 24, name: 'Coke Can (Coca-Cola) @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-24.jpg' },
+        { id: 25, name: 'Fanta Merah @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-25.jpg' },
+        { id: 26, name: 'Sprite @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-26.jpg' },
+        { id: 27, name: 'Tonic Water @ 330 ml', price: 'Rp25.000', image: '../assets/icons/dr-27.jpg' },
+        { id: 28, name: 'Soda Water @ 330 ml', price: 'Rp25.000', image: '../assets/icons/dr-28.jpg' },
+        { id: 29, name: 'Soya Bean @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-29.jpg' },
+        { id: 30, name: 'Cincau @ 330 ml', price: 'Rp21.000', image: '../assets/icons/dr-30.jpg' },
+        { id: 31, name: 'Aqua Big @ 1500 ml', price: 'Rp26.000', image: '../assets/icons/dr-31.jpg' },
+        { id: 32, name: 'Aqua Small @ 600 ml', price: 'Rp13.000', image: '../assets/icons/dr-32.jpg' },
+        { id: 33, name: 'Nu Green Tea @ 500 ml', price: 'Rp26.000', image: '../assets/icons/dr-33.jpg' },
+        { id: 34, name: 'Red BUll @ 250 ml', price: 'Rp32.000', image: '../assets/icons/dr-34.jpg' },
+        { id: 35, name: 'Mizone @ 500 ml', price: 'Rp26.000', image: '../assets/icons/dr-35.jpg' },
+
+        // Tea
+        { id: 36, name: 'Teh Tarik', price: 'Rp30.000', image: '../assets/icons/dr-36.jpg' },
+        { id: 37, name: 'Kopi Tarik', price: 'Rp35.000', image: '../assets/icons/dr-37.jpg' },
+        { id: 38, name: 'Milo Cup', price: 'Rp29.000', image: '../assets/icons/dr-38.jpg' },
+        { id: 39, name: 'Milo Big', price: 'Rp48.000', image: '../assets/icons/dr-39.jpg' },
+        { id: 40, name: 'Hot Tea Small', price: 'Rp15.000', image: '../assets/icons/dr-40.jpg' },
+        { id: 41, name: 'Ice Tea', price: 'Rp15.000', image: '../assets/icons/dr-41.jpg' },
+        { id: 42, name: 'Teh Tarik Jahe', price: 'Rp35.000', image: '../assets/icons/dr-42.jpg' },
+
+        { id: 43, name: 'San Miguel @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-43.jpg' },
+        { id: 44, name: 'Bintang Beer @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-44.jpg' },
+        { id: 45, name: 'Tiger Beer @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-45.jpg' },
+        { id: 46, name: 'Heineken @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-46.jpg' },
+        { id: 47, name: 'Carlsberg @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-47.jpg' },
+        { id: 48, name: 'San Mig Light @ 330 ml', price: 'Rp42.000', image: '../assets/icons/dr-48.jpg' },
+        { id: 49, name: 'Anker/Guinness Stout @ 330 ml', price: 'Rp49.000', image: '../assets/icons/dr-49.jpg' },
+        { id: 50, name: 'Soju', price: 'Rp80.000', image: '../assets/icons/dr-50.jpg' },
+        { id: 51, name: 'Saigon', price: 'Rp60.000', image: '../assets/icons/dr-51.jpg' },
+        { id: 52, name: 'Taiwan Beer', price: 'Rp49.000', image: '../assets/icons/dr-52.jpg' },
+        { id: 53, name: 'Kaiserdom', price: 'Rp150.000', image: '../assets/icons/dr-53.jpg' },
+        { id: 54, name: 'Johnnie Black Label (Shoot)', price: 'Rp60.000', image: '../assets/icons/dr-54.jpg' },
+        { id: 55, name: 'Chivas Regal (Shoot)', price: 'Rp60.000', image: '../assets/icons/dr-55.jpg' },
+        { id: 56, name: 'Gordon Dry Gin (Shoot)', price: 'Rp48.000', image: '../assets/icons/dr-56.jpg' },
+        { id: 57, name: 'Smirnoff Vodka (Shoot)', price: 'Rp42.000', image: '../assets/icons/dr-57.jpg' },
+        { id: 58, name: 'Jack Daniel (Shoot)', price: 'Rp60.000', image: '../assets/icons/dr-58.jpg' },
+        { id: 59, name: 'Craft Beer (Drink)', price: 'Rp42.000', image: '../assets/icons/dr-59.jpg' },
+        { id: 60, name: 'Craft Beer Jug', price: 'Rp168.000', image: '../assets/icons/dr-60.jpg' },
+        { id: 61, name: 'Bacardi Light / Rum 750 ml', price: 'Rp667.000', image: '../assets/icons/dr-61.jpg' },
+        { id: 62, name: 'Bin 222 @ 750 ml', price: 'Rp552.000', image: '../assets/icons/dr-62.jpg' },
+        { id: 63, name: 'Bin 444 @ 750 ml', price: 'Rp552.000', image: '../assets/icons/dr-63.jpg' },
+        { id: 64, name: 'Bin 555 @ 750 ml', price: 'Rp552.000', image: '../assets/icons/dr-64.jpg' },
+        { id: 65, name: 'Black Label / J Walker Black @ 750 ml', price: 'Rp878.000', image: '../assets/icons/dr-65.jpg' },
+        { id: 66, name: 'Chivas Regal @ 750 ml', price: 'Rp914.000', image: '../assets/icons/dr-66.jpg' },
+        { id: 67, name: 'Gordon Dry Gin @ 750 ml', price: 'Rp667.000', image: '../assets/icons/dr-67.jpg' },
+        { id: 68, name: 'Jack Daniel @ 750 ml', price: 'Rp945.000', image: '../assets/icons/dr-68.jpg' },
+        { id: 69, name: 'Smirnoff Vodka @ 750 ml', price: 'Rp667.000', image: '../assets/icons/dr-69.jpg' },
+        { id: 70, name: 'Jameson @ 750 ml', price: 'Rp599.000', image: '../assets/icons/dr-70.jpg' },
       ],
 
       isModalOpen: false,
@@ -255,23 +492,6 @@ export default {
       isMenuSectionScrolled: false,
     };
   },
-  // computed: {
-  //   makananBeratItems() {
-  //     return this.menuItems.filter(item => item.type === 'berat')
-  //   },
-  //   snackItems() {
-  //     return this.menuItems.filter(item => item.type === 'snack');
-  //   },
-  //   coldDessertItems() {
-  //     return this.menuItems.filter(item => item.type === 'cold dessert');
-  //   },
-  //   hotDessertItems() {
-  //     return this.menuItems.filter(item => item.type === 'hot dessert');
-  //   },
-  //   drinkItems() {
-  //     return this.menuItems.filter(item => item.type === 'drink');
-  //   }
-  // },
   methods: {
     selectOption(option) {
       this.selectedOption = option;
@@ -314,24 +534,20 @@ export default {
       const sectionMap = {
         makananBeratSection: 'MAKANAN BERAT',
         snackSection: 'SNACK',
-        coldDessertSection: 'COLD DESSERT',
-        hotDessertSection: 'HOT DESSERT',
-        drinkSection: 'DRINK'
+        dessertSection: 'DESSERT',
+        drinkSection: 'DRINK',
+        cigaretteSection: 'CIGARETTE'
       };
       this.selectedTab = sectionMap[section];
       const sectionRef = this.$refs[section];
-      sectionRef.scrollIntoView({ behavior: 'smooth' });
+      if (sectionRef) {
+        const header = document.querySelector('header');
+        const headerOffset = header ? header.offsetHeight : 0;
+        const top  = sectionRef.offsetTop - headerOffset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+      // sectionRef.scrollIntoView();
     },
-    // fetchMenuItems() {
-    //   fetch('http://localhost:3000/menu')
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       this.menuItems = data; // Assign fetched data to menuItems
-    //     })
-    //     .catch(error => {
-    //       console.error('There was an error!', error);
-    //     });
-    // },
     toggleMenu() {
       this.showMenu = !this.showMenu;
     }
@@ -342,9 +558,6 @@ export default {
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
   },
-  // created() {
-  //   this.fetchMenuItems();
-  // }
 }
 </script>
 
@@ -392,7 +605,6 @@ body {
 }
 
 header {
-  background-color: #f0f0f0; 
   color: black; 
   text-align: center;
   width: 100%;

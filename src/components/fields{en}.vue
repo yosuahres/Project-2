@@ -1,50 +1,64 @@
 <template>
     <div>
       <header>
-        <div class="top-bar">
-          <div class="right-icons">
-            <button class="search-icon" @click="showSearch = !showSearch">
-              <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
-            </button>
-            <button class="menu-button" @click="toggleMenu">  
-              ☰
-            </button> 
-            <transition name="slide">
-              <div class="menu" v-if="showMenu">
-                <div class="menu-header">
-                  <button class="close-menu" @click="toggleMenu">✖</button>
-                  <img src="../assets/icons/logo1 (1).png" alt="Menu Logo" class="menu-logo">
-                </div>
-                <nav class="menu-nav">
-                  <div class="menu-item-top">
-                    <a href="/page2">
-                      <img src="../assets/icons/language.png" alt="2" class="menu-icon">
-                      Language
-                    </a>
+        <div class="sticky-header" :class="{ 'header-scrolled': isScrolled }">
+          <div class="top-bar">
+    
+            <!-- header for scrolled -->
+            <div class="background-icon" v-if="isScrolled">
+            </div>
+            <!-- end -->
+    
+            <div class="right-icons">
+              <!-- <button class="search-icon" @click="showSearch = !showSearch">
+                <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
+              </button> -->
+              <button class="menu-button" @click="toggleMenu">  
+                ☰
+              </button> 
+    
+              <!-- menu modal -->
+              <transition name="slide">
+                <div class="menu" v-if="showMenu && !isModalOpen">
+                  <div class="menu-header">
+                    <button class="close-menu" @click="toggleMenu">✖</button>
+                    <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
                   </div>
-                </nav>
-              </div>
-            </transition>
+                  <nav class="menu-nav">
+                    <div class="menu-item-top">
+                      <a @click.prevent="openModal">
+                        <img src="../assets/icons/language.png" alt="2" class="menu-icon">
+                        Language
+                      </a>
+                    </div>
+                  </nav>
+                </div>
+              </transition>
+              <!-- end of menu modal -->
+            </div>
           </div>
         </div>
-  
-        <img src="../assets/icons/ip-logo.png" alt="Header Image" class="header-image">
-        <button class="header-button">
-          <div class="header-content">
-            <h1>Indah Puri</h1>
-            <p>Open today, 06:30-21:15</p>
-          </div>
-          <span class="arrow-icon">></span>
-        </button>
-
-        <div class="order-type">
-          <h3>Discover More</h3>
-          <button class="dine-in-button" @click="goToMenuInformation">
-            Menu Info
+    
+        <div class="pad-only">
+    
+          <img src="../assets/icons/ip-logo.png" alt="Header Image" class="header-image">
+          <button class="header-button" @click="goToAboutPage">
+            <div class="header-content">
+              <h1>Indah Puri</h1>
+              <p>Open today, 06:00-19:00</p>
+            </div>
+            <span class="arrow-icon">></span>
           </button>
+    
+          <div class="order-type">
+            <h3>Discover More</h3>
+            <button class="dine-in-button" @click="goToMenuInformation">
+              Restaurant Menu
+            </button>
+          </div>
+    
         </div>
-        
-      </header>
+        </header>
   
       <div class="container">
         <div class="media-container">
@@ -54,12 +68,39 @@
             Your browser does not support the video tag.
           </video>
         </div>
-        <div v-if="showModal" class="modal" @click="showModal = false">
-          <span class="close" @click="showModal = false">&times;</span>
-          <img class="modal-content" src="../assets/icons/handicap.jpeg">
+        <div v-if="showModal" class="modal-img" @click="showModal = false">
+          <span class="close-img" @click="showModal = false">&times;</span>
+          <img class="modal-content-img" src="../assets/icons/handicap.jpeg">
         </div>
       </div>
     </div>
+
+    <!-- modal -->
+
+      <!-- languange selection modal -->
+      <div v-if="isModalOpen" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Select Language</h2>
+            <span class="close" @click="closeModal">&times;</span>
+          </div>
+          <div class="modal-body">
+            <button :class="{ selectedLang: selectedLanguage === 'English' }" @click="selectLanguage('English')" class="modal-button">
+              <span>English</span>
+              <span v-if="selectedLanguage === 'English'" class="tick">
+                <img src="../assets/icons/check.png" alt="selected" class="tick-icon">
+              </span>
+            </button>
+            <button :class="{ selectedLang: selectedLanguage === 'Indonesia' }" @click="selectLanguage('Indonesia')" class="modal-button">
+              <span>Indonesia</span>
+              <span v-if="selectedLanguage === 'Indonesia'" class="tick">
+                <img src="../assets/icons/check.png" alt="selected" class="tick-icon">
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
   </template>
   
   <script>
@@ -69,12 +110,15 @@
       return {
         selectedOption: 'MAKANAN',
         selectedTab: 'MAKANAN BERAT',
+        selectedLanguage: 'English',
+        isModalOpen: false,
         showModal: false,
         showMenu: false,
         showSearch: false,
         showModalz: false,
         menuItems: [],
-        modalImage: '../assets/icons/handicap.jpeg'
+        modalImage: '../assets/icons/handicap.jpeg',
+        isScrolled: false,
       };
     },
     computed: {
@@ -115,40 +159,73 @@
         const sectionRef = this.$refs[section];
         sectionRef.scrollIntoView({ behavior: 'smooth' });
       },
-      fetchMenuItems() {
-        fetch('http://localhost:3000/menu')
-          .then(response => response.json())
-          .then(data => {
-            this.menuItems = data; // Assign fetched data to menuItems
-          })
-          .catch(error => {
-            console.error('There was an error!', error);
-          });
+      openModal() {
+      this.isModalOpen = true;
       },
+      closeModal() {
+        this.isModalOpen = false;
+        this.showMenu = false;
+      },
+      selectLanguage(language) {
+      if (language === 'English') {
+        this.$router.push({ name: 'MenuPageEng' });
+      } else {
+        this.$router.push({ name: 'MenuPageInd' });
+      }
+      this.closeModal();
+      this.showMenu = false;
+      },
+      // fetchMenuItems() {
+      //   fetch('http://localhost:3000/menu')
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       this.menuItems = data; // Assign fetched data to menuItems
+      //     })
+      //     .catch(error => {
+      //       console.error('There was an error!', error);
+      //     });
+      // },
       toggleMenu() {
         this.showMenu = !this.showMenu;
       }
     },
-    created() {
-      this.fetchMenuItems();
-    }
+    // created() {
+    //   this.fetchMenuItems();
+    // }
   }
   </script>
   
   <style scoped>
-  body {
+   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f5f5dc; /* Light beige background color */
     text-align: center;
   }
-  
+
+  .pad-only {
+    padding: 30px 20px 10px 20px;
+  }
+
+  .sticky-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow-y: auto; 
+    z-index: 1000; 
+  } 
+
+  .header-scrolled {
+    background-color: white;
+    width: 100%;
+  }
+
   header {
     background-color: #f0f0f0; 
     color: black; 
     text-align: center;
-    padding: 10px 20px;
     width: 100%;
     position: relative;
   }
@@ -158,6 +235,7 @@
     justify-content: flex-end; /* Align to the right */
     align-items: center; /* Align items to the center */
     margin-top: 0; /* Remove any margin from the top */
+    padding-right: 20px;
   }
   
   .right-icons {
@@ -336,16 +414,6 @@
     font-size: 24px;
     color: black;
   }
-  
-  .closex {
-    position: absolute;
-    top: 20px;
-    right: 35px;
-    color: #fff;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-  }
 
   .container {
     display: flex;
@@ -369,31 +437,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
   }
-  
-  .modal {
-    display: flex;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
   .game-info {
     font-size: 1.2em;
     color: #333;
@@ -468,6 +511,7 @@
     font-size: 12px; /* Adjusted text size */
     border: none;
     cursor: pointer;
+
     display: flex;
     align-items: center;
   }
@@ -581,7 +625,6 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
     animation: slide-up 0.3s ease-out; /* Slide up animation */
   }
   
@@ -596,19 +639,20 @@
   
   .modal-content {
     background-color: #fff;
-    padding: 20px;
-    border-radius: 20px; /* Rounded corners */
+    padding: 2px;
+    border-radius: 20px 20px 0px 0px; /* Rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    width: 90%; /* Make it wider */
-    max-width: 500px; /* Maximum width */
+    width: 100%; /* Make it wider */
+    max-width: 600px; /* Maximum width */
+    height: 100%;
+    max-height: 235px;
   }
   
   .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
   }
   
   .modal-header h2 {
@@ -616,6 +660,20 @@
     margin: 0;
   }
   
+  .tick {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  .tick-icon {
+    width: 16px;
+    height: 16px;
+  }
+
   .close {
     color: #aaa;
     font-size: 20px; /* Adjusted text size */
@@ -658,13 +716,13 @@
     color: white;
   }
   
-  .modal-button {
+  .modal-button{
     font-size: 18px; /* Increase text size */
     padding: 15px 20px; /* Increase padding */
-    margin: 10px 0; /* Add margin between buttons */
-    border: 1px solid #ccc; /* Add border */
-    border-radius: 5px; /* Add border radius */
-    background-color: #fff;
+    margin: 5px 0; /* Add margin between buttons */
+    border: none;
+    border-radius: 10px; /* Add border radius */
+    background-color:#fff;
     cursor: pointer;
     width: 100%; /* Make button full width */
     display: flex;
@@ -678,11 +736,6 @@
   
   .modal-button.selected {
     background-color: green;
-    color: white;
-  }
-  
-  .tick {
-    margin-left: auto;
     color: white;
   }
   
