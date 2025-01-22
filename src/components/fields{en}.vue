@@ -13,20 +13,20 @@
               <!-- <button class="search-icon" @click="showSearch = !showSearch">
                 <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
               </button> -->
-              <button class="menu-button" @click="toggleMenu">  
+              <button class="menu-button" @click="showMenu = true, isModalOpen = false">  
                 ☰
               </button> 
     
               <!-- menu modal -->
               <transition name="slide">
-                <div class="menu" v-if="showMenu && !isModalOpen">
+                <div class="menu" v-if="showMenu" @click="showMenu = false">
                   <div class="menu-header">
                     <button class="close-menu" @click="toggleMenu">✖</button>
                     <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
                   </div>
                   <nav class="menu-nav">
                     <div class="menu-item-top">
-                      <a @click.prevent="openModal">
+                      <a @click.prevent="isModalOpen = true">
                         <img src="../assets/icons/language.png" alt="2" class="menu-icon">
                         Language
                       </a>
@@ -68,6 +68,8 @@
             Your browser does not support the video tag.
           </video>
         </div>
+
+        <!-- modal -->
         <div v-if="showModal" class="modal-img" @click="showModal = false">
           <!-- <span class="close-img" @click="showModal = false">&times;</span> -->
           <img class="modal-content-img" src="../assets/icons/handicap.jpeg">
@@ -78,7 +80,7 @@
     <!-- modal -->
 
       <!-- languange selection modal -->
-      <div v-if="isModalOpen" class="modal">
+      <div v-if="isModalOpen" class="modal" @click="isModalOpen = false">
         <div class="modal-content">
           <div class="modal-header">
             <h2>Select Language</h2>
@@ -121,50 +123,16 @@
         isScrolled: false,
       };
     },
-    computed: {
-      makananBeratItems() {
-        return this.menuItems.filter(item => item.type === 'berat');
-      },
-      snackItems() {
-        return this.menuItems.filter(item => item.type === 'snack');
-      },
-      coldDessertItems() {
-        return this.menuItems.filter(item => item.type === 'cold dessert');
-      },
-      hotDessertItems() {
-        return this.menuItems.filter(item => item.type === 'hot dessert');
-      },
-      drinkItems() {
-        return this.menuItems.filter(item => item.type === 'drink');
-      }
-    },
     methods: {
-      selectOption(option) {
-        this.selectedOption = option;
-        this.showModal = false;
-        this.scrollToSection(option === 'MAKANAN' ? 'makananBeratSection' : 'drinkSection');
-      },
       goToMenuInformation() {
         this.$router.push({ name: 'MenuPageEng' }); 
-      },
-      scrollToSection(section) {
-        const sectionMap = {
-          makananBeratSection: 'MAKANAN BERAT',
-          snackSection: 'SNACK',
-          coldDessertSection: 'COLD DESSERT',
-          hotDessertSection: 'HOT DESSERT',
-          drinkSection: 'DRINK'
-        };
-        this.selectedTab = sectionMap[section];
-        const sectionRef = this.$refs[section];
-        sectionRef.scrollIntoView({ behavior: 'smooth' });
       },
       openModal() {
       this.isModalOpen = true;
       },
       closeModal() {
         this.isModalOpen = false;
-        this.showMenu = false;
+        // this.showMenu = false;
       },
       selectLanguage(language) {
       if (language === 'English') {
@@ -175,29 +143,14 @@
       this.closeModal();
       this.showMenu = false;
       },
-      // fetchMenuItems() {
-      //   fetch('http://localhost:3000/menu')
-      //     .then(response => response.json())
-      //     .then(data => {
-      //       this.menuItems = data; // Assign fetched data to menuItems
-      //     })
-      //     .catch(error => {
-      //       console.error('There was an error!', error);
-      //     });
-      // },
       toggleMenu() {
         this.showMenu = !this.showMenu;
       }
     },
-    // created() {
-    //   this.fetchMenuItems();
-    // }
   }
   </script>
   
   <style scoped>
-
-
 .modal-img {
   display: flex;
   justify-content: center;

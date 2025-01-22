@@ -13,20 +13,20 @@
             <!-- <button class="search-icon" @click="showSearch = !showSearch">
               <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
             </button> -->
-            <button class="menu-button" @click="toggleMenu">  
+            <button class="menu-button" @click="showMenu = true , isModalOpen = false">  
               ☰
             </button> 
   
             <!-- menu modal -->
             <transition name="slide">
-              <div class="menu" v-if="showMenu && !isModalOpen">
+              <div class="menu" v-if="showMenu" @click="showMenu = false">
                 <div class="menu-header">
                   <button class="close-menu" @click="toggleMenu">✖</button>
                   <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
                 </div>
                 <nav class="menu-nav">
                   <div class="menu-item-top">
-                    <a @click.prevent="openModal">
+                    <a @click.prevent="isModalOpen = true">
                       <img src="../assets/icons/language.png" alt="2" class="menu-icon">
                       Bahasa
                     </a>
@@ -67,18 +67,20 @@
           <source src="../assets/icons/field.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
+      </div>  
+ 
+        <!-- modal -->
+        <div v-if="showModal" class="modal-img" @click="showModal = false">
+          <!-- <span class="close-img" @click="showModal = false">&times;</span> -->
+          <img class="modal-content-img" src="../assets/icons/handicap.jpeg">
+        </div>
       </div>
-      <div v-if="showModal" class="modal-img" @click="showModal = false">
-        <!-- <span class="close-img" @click="showModal = false">&times;</span> -->
-        <img class="modal-content-img" src="../assets/icons/handicap.jpeg">
-      </div>
-    </div>
-  </div>
+    </div>      
 
   <!-- modal -->
 
     <!-- languange selection modal -->
-    <div v-if="isModalOpen" class="modal">
+    <div v-if="isModalOpen" class="modal" @click="isModalOpen = false">
       <div class="modal-content">
         <div class="modal-header">
           <h2>Pilih Bahasa</h2>
@@ -130,7 +132,7 @@ export default {
     },
     closeModal() {
       this.isModalOpen = false;
-      this.showMenu = false;
+      // this.showMenu = false;
     },
     selectLanguage(language) {
     if (language === 'English') {
@@ -411,11 +413,11 @@ header {
   max-height: 90%;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease; /* Add transition for smooth zoom */
+  transition: transform 0.3s ease;
 }
 
 .modal-content-img:hover {
-  transform: scale(1.1); /* Slight zoom on hover */
+  transform: scale(1.5); 
 }
 
 .close-img {

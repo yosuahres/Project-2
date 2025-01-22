@@ -163,7 +163,7 @@
     <!-- </div> -->
 
       <!-- languange selection modal -->
-      <div v-if="isModalOpen" class="modal">
+      <div v-if="isModalOpen" class="modal" @click.self="closeModal">
         <div class="modal-content">
           <div class="modal-header">
             <h2>Select Language</h2>
@@ -528,7 +528,7 @@ export default {
         this.$router.push({ name: 'MenuPageInd' });
       }
       this.closeModal();
-      this.showMenu = false;
+      // this.showMenu = false;
     },
     goToHandicapInformation() {
       this.$router.push({ name: 'HandicapGolfInfoPageEng' }); 
