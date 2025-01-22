@@ -69,7 +69,7 @@
         </video>
       </div>
       <div v-if="showModal" class="modal-img" @click="showModal = false">
-        <span class="close-img" @click="showModal = false">&times;</span>
+        <!-- <span class="close-img" @click="showModal = false">&times;</span> -->
         <img class="modal-content-img" src="../assets/icons/handicap.jpeg">
       </div>
     </div>
@@ -391,6 +391,50 @@ header {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
+
+.modal-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8); /* Dark background */
+}
+
+.modal-content-img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Add transition for smooth zoom */
+}
+
+.modal-content-img:hover {
+  transform: scale(1.1); /* Slight zoom on hover */
+}
+
+.close-img {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-img:hover,
+.close-img:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .game-info {
   font-size: 1.2em;
   color: #333;
