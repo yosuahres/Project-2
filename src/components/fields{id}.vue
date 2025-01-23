@@ -19,20 +19,20 @@
   
             <!-- menu modal -->
             <transition name="slide">
-              <div class="menu" v-if="showMenu" @click="showMenu = false">
-                <div class="menu-header">
-                  <button class="close-menu" @click="toggleMenu">✖</button>
-                  <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
-                </div>
-                <nav class="menu-nav">
-                  <div class="menu-item-top">
-                    <a @click.prevent="isModalOpen = true">
-                      <img src="../assets/icons/language.png" alt="2" class="menu-icon">
-                      Bahasa
-                    </a>
+                <div class="menu" v-if="showMenu" @click="showMenu = false">
+                  <div class="menu-header">
+                    <button class="close-menu" @click="toggleMenu">✖</button>
+                    <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
                   </div>
-                </nav>
-              </div>
+                  <nav class="menu-nav">
+                    <div class="menu-item-top">
+                      <a @click.prevent="isModalOpen = true">
+                        <img src="../assets/icons/language.png" alt="2" class="menu-icon">
+                        Bahasa
+                      </a>
+                    </div>
+                  </nav>
+                </div>
             </transition>
             <!-- end of menu modal -->
           </div>

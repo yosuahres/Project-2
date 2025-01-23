@@ -95,7 +95,7 @@
           <h2>HEAVY FOOD</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -220,12 +220,12 @@ export default {
       makananBeratItems: [
         { id: 1, name: 'Soup Buntut Goreng with Rice', price: 'Rp140.000', image: '../assets/icons/mb-1.jpg' },
         { id: 2, name: 'Chicken Satay Set', price: 'Rp97.000', image: '../assets/icons/mb-2.jpg' },
-        { id: 3, name: 'Fried Rice Indonesia', price: 'Rp80.000', image: '../assets/icons/mb-3.jpg' },
+        { id: 3, name: 'Fried Rice Indonesia', price: 'Rp80.000', image: '../assets/icons/mb-3.jpeg' },
         { id: 4, name: 'Sliced Beef with Black Pepper Set', price: 'Rp145.000', image: '../assets/icons/mb-4.jpg' },
         { id: 5, name: 'Fried Noodle Indonesia', price: 'Rp78.000', image: '../assets/icons/mb-5.jpg' },
         { id: 6, name: 'Crispy Chicken Wing', price: 'Rp110.000', image: '../assets/icons/mb-6.jpg' },
         { id: 7, name: 'Chicken Steak', price: 'Rp135.000', image: '../assets/icons/mb-7.jpg' },
-        { id: 8, name: 'Sirloin Steak', price: 'Rp189.000', image: '../assets/icons/mb-8.jpg' },
+        { id: 8, name: 'Sirloin Steak', price: 'Rp189.000', image: '../assets/icons/mb-8.jpeg' },
         { id: 9, name: 'Fried Noodle with Chicken', price: 'Rp80.000', image: '../assets/icons/mb-9.jpg' },
         { id: 10, name: 'Tomyam Seafood Set', price: 'Rp110.000', image: '../assets/icons/mb-10.jpg' },
         { id: 11, name: 'Nasi Kari Ayam', price: 'Rp80.000', image: '../assets/icons/mb-11.jpg' },
@@ -568,6 +568,12 @@ export default {
 </script>
 
 <style scoped>
+.menu-image {
+  width: 150px; 
+  height: 150px; 
+  object-fit: cover; 
+}
+
 html {
   scroll-behavior: smooth;
 }
