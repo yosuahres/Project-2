@@ -247,7 +247,7 @@ export default {
         { id: 26, name: 'Roti Prata With Kari Ayam', price: 'Rp79.000', image: '../assets/icons/mb-26.webp' },
         { id: 27, name: 'Mix Sandwich', price: 'Rp81.000', image: '../assets/icons/mb-27.webp' },
         { id: 28, name: 'Tuna French Toast', price: 'Rp49.000', image: '../assets/icons/mb-28.jpg' },
-        { id: 29, name: 'Chicken French Toast', price: 'Rp49.000', image: '../assets/icons/mb-29.jog' },
+        { id: 29, name: 'Chicken French Toast', price: 'Rp49.000', image: '../assets/icons/mb-29.jpg' },
         { id: 30, name: 'Rissole', price: 'Rp41.000', image: '../assets/icons/mb-30.jpeg' },
         { id: 31, name: 'Prata Gula', price: 'Rp41.000', image: '../assets/icons/mb-31.jpg' },
         { id: 32, name: 'Prata Kosong', price: 'Rp37.000', image: '../assets/icons/mb-32.jpg' },
@@ -284,7 +284,7 @@ export default {
         { id: 57, name: 'Oxtail Soup 60k', price: 'Rp70.000', image: '../assets/icons/mb-57.avif' },
 
         // BEEF, CHICKEN, PRAWN & FISH
-        { id: 58, name: 'Chicken Teriyaki Set', price: 'Rp101.000', image: '../assets/icons/mb-58.jpg' },
+        { id: 58, name: 'Chicken Teriyaki Set', price: 'Rp101.000', image: '../assets/icons/mb-58.jpeg' },
         { id: 59, name: 'Chicken Satay Set', price: 'Rp97.000', image: '../assets/icons/mb-59.avif' },
         { id: 60, name: 'Chicken Ginger Set', price: 'Rp104.000', image: '../assets/icons/mb-60.jpg' },
         { id: 61, name: 'Chicken Lemon Sauce Set', price: 'Rp104.000', image: '../assets/icons/mb-61.jpg' },
@@ -319,7 +319,7 @@ export default {
         { id: 89, name: "Fish 'n' Chips", price: "Rp161.000", image: "../assets/icons/mb-89.webp" },
         { id: 90, name: "Mixed Omelette & Fries", price: "Rp88.000", image: "../assets/icons/mb-90.webp" },
         { id: 91, name: "Scramble Egg & Toast", price: "Rp88.000", image: "../assets/icons/mb-91.jpg" },
-        { id: 92, name: "Fried Egg (Double)", price: "Rp19.000", image: "../assets/icons/mb-92.jpg" },
+        { id: 92, name: "Fried Egg (Double)", price: "Rp19.000", image: "../assets/icons/mb-92.webp" },
         { id: 93, name: "Hard/Half Boiled Egg", price: "Rp19.000", image: "../assets/icons/mb-93.jpeg" },
         { id: 94, name: "Cheese Omelette", price: "Rp81.000", image: "../assets/icons/mb-94.png" },
         { id: 95, name: "Mushroom Omelette", price: "Rp81.000", image: "../assets/icons/mb-95.jpg" },
@@ -342,8 +342,7 @@ export default {
         { id: 110, name: "Yaki Udon Seafood", price: "Rp83.000", image: "../assets/icons/mb-110.jpg" },
         { id: 111, name: "Udon Soup Seafood", price: "Rp83.000", image: "../assets/icons/mb-111.jpg" },
         { id: 112, name: "Yaki Udon With Beef", price: "Rp89.000", image: "../assets/icons/mb-112.jpeg" },
-        { id: 113, name: "Korea Noodle + Plain Rice", price: "Rp140.000", image: "../assets/icons/mb-113.avif
-        " },
+        { id: 113, name: "Korea Noodle + Plain Rice", price: "Rp140.000", image: "../assets/icons/mb-113.avif" },
 
       ],
       snackItems:[
