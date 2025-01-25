@@ -74,11 +74,11 @@
             </div>
             {{ selectedOption }}
           </button>
-          <div :class="['tab', { active: selectedTab === 'MAKANAN BERAT' }]" @click="scrollToSection('makananBeratSection')">HEAVY FOOD</div>
+          <div :class="['tab', { active: selectedTab === 'MAKANAN BERAT' }]" @click="scrollToSection('makananBeratSection')">MAKANAN BERAT</div>
           <div :class="['tab', { active: selectedTab === 'SNACK' }]" @click="scrollToSection('snackSection')">SNACK</div>
           <div :class="['tab', { active: selectedTab === 'DESSERT' }]" @click="scrollToSection('dessertSection')">DESSERT</div>
-          <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">DRINK</div>
-          <div :class="['tab', { active: selectedTab === 'CIGARETTE' }]" @click="scrollToSection('cigaretteSection')">CIGARETTE</div>
+          <div :class="['tab', { active: selectedTab === 'DRINK' }]" @click="scrollToSection('drinkSection')">MINUMAN</div>
+          <div :class="['tab', { active: selectedTab === 'CIGARETTE' }]" @click="scrollToSection('cigaretteSection')">ROKOK</div>
         </div>
         </div>
         </div>
@@ -95,7 +95,7 @@
           <h2>MAKANAN BERAT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in makananBeratItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -105,7 +105,7 @@
           <h2>SNACK</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in snackItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -121,7 +121,7 @@
           <h2>DESSERT</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in coldDessertItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -138,20 +138,20 @@
           </div>
         </div> -->
         <div class="menu-section" ref="drinkSection">
-          <h2>DRINK</h2>
+          <h2>MINUMAN</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in drinkItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
           </div>
         </div>
         <div class="menu-section" ref="cigaretteSection">
-          <h2>CIGARETTE</h2>
+          <h2>ROKOK</h2>
           <div class="menu-grid two-columns">
             <div v-for="item in cigaretteItems" :key="item.id" class="menu-item">
-              <img :src="item.image" :alt="item.name">
+              <img :src="item.image" :alt="item.name" class="menu-image">
               <h3>{{ item.name }}</h3>
               <p>{{ item.price }}</p>
             </div>
@@ -200,9 +200,9 @@
                 <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
               </span>
             </button>
-            <button :class="{ selected: selectedOption === 'DRINK' }" @click="selectOption('DRINK')" class="modalbot-button">
+            <button :class="{ selected: selectedOption === 'MINUMAN' }" @click="selectOption('MINUMAN')" class="modalbot-button">
               <span>MINUMAN</span>
-              <span v-if="selectedOption === 'DRINK'" class="tickbot">
+              <span v-if="selectedOption === 'MINUMAN'" class="tickbot">
                 <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
               </span>
             </button>
@@ -584,6 +584,12 @@ export default {
 </script>
 
 <style scoped>
+.menu-image {
+  width: 150px; 
+  height: 150px; 
+  object-fit: cover; 
+}
+
 html {
   scroll-behavior: smooth;
 }
