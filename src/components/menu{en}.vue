@@ -194,9 +194,9 @@
             <span class="close" @click="showModal = false">&times;</span>
           </div>
           <div class="modal-body">
-            <button :class="{ selected: selectedOption === 'MAKANAN' }" @click="selectOption('MAKANAN')" class="modalbot-button">
+            <button :class="{ selected: selectedOption === 'FOOD' }" @click="selectOption('FOOD')" class="modalbot-button">
               <span>FOOD</span>
-              <span v-if="selectedOption === 'MAKANAN'" class="tickbot">
+              <span v-if="selectedOption === 'FOOD'" class="tickbot">
                 <img src="../assets/icons/checkbot.png" alt="selected" class="tickbot-icon">
               </span>
             </button>
@@ -472,7 +472,7 @@ export default {
       ],
 
       isModalOpen: false,
-      selectedOption: 'MAKANAN',
+      selectedOption: 'FOOD',
       selectedLanguage: 'English',
       selectedTab: 'MAKANAN BERAT',
       showModal: false,
@@ -488,7 +488,7 @@ export default {
     selectOption(option) {
       this.selectedOption = option;
       this.showModal = false;
-      this.scrollToSection(option === 'MAKANAN' ? 'makananBeratSection' : 'drinkSection');
+      this.scrollToSection(option === 'FOOD' ? 'makananBeratSection' : 'drinkSection');
     },
     handleScroll() {
       const scrollPosition = window.scrollY;
