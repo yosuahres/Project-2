@@ -14,20 +14,20 @@
           <!-- <button class="search-icon" @click="showSearch = !showSearch">
             <img src="../assets/icons/search.png" alt="search icon" style="width: 24px; height: 24px;">
           </button> -->
-          <button class="menu-button" @click="toggleMenu">  
+          <button class="menu-button" @click="showMenu = true, isModalOpen = false">  
             ☰
           </button> 
 
           <!-- menu modal -->
           <transition name="slide">
-            <div class="menu" v-if="showMenu && !isModalOpen">
+            <div class="menu" v-if="showMenu" @click="showMenu = false">
               <div class="menu-header">
                 <button class="close-menu" @click="toggleMenu">✖</button>
                 <img src="../assets/icons/ip-logo.png" alt="Menu Logo" class="menu-logo">
               </div>
               <nav class="menu-nav">
                 <div class="menu-item-top">
-                  <a @click.prevent="openModal">
+                  <a @click.prevent="isModalOpen = true">
                     <img src="../assets/icons/language.png" alt="2" class="menu-icon">
                     Bahasa
                   </a>
@@ -163,7 +163,7 @@
     <!-- </div> -->
 
       <!-- languange selection modal -->
-      <div v-if="isModalOpen" class="modal">
+      <div v-if="isModalOpen" class="modal" @click="isModalOpen = false">
         <div class="modal-content">
           <div class="modal-header">
             <h2>Pilih Bahasa</h2>
