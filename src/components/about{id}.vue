@@ -75,7 +75,7 @@ export default {
       window.open("https://maps.app.goo.gl/tmX3jqhw1aKVBe5M7", "_blank");
     },
     goBack() {
-      this.$router.push({ name: 'MenuPageEng' }); 
+      this.$router.push({ name: 'MenuPageInd' }); 
     },
   },
 };

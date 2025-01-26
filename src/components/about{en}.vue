@@ -195,10 +195,9 @@ body {
   border-radius: 5px;
   cursor: pointer;
   font-size: 12px;
-  width: 100%;
+  width: 180px;
   border: 1px solid lightgray;
 }
-
 .call-btn {
   background-color: transparent;
   color: black;
