@@ -1,32 +1,63 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import OutletIntro from '@/components/OutletIntro.vue'
-import MenuItemCard from '@/components/MenuItemCard.vue'
-import BottomSheet from '@/components/BottomSheet.vue'
-import OptionList from '@/components/OptionList.vue'
+import MenuSearch from '@/components/MenuSearch.vue'
+import MenuItemRow from '@/components/MenuItemRow.vue'
+import CategorySheet from '@/components/CategorySheet.vue'
+import AppIcon from '@/components/AppIcon.vue'
 import { useI18n } from '@/i18n'
 import { menuCategories, menuGroups } from '@/data/menu'
+import { searchMenu } from '@/data/menu-search'
 
 // After a tab tap, the scroll-spy waits until the smooth scroll has been idle this long.
 const SCROLL_IDLE_MS = 150
+// Screen readers hear the result count once typing pauses, not on every keystroke.
+const ANNOUNCE_DELAY_MS = 600
 
 const { t } = useI18n()
 
+const query = ref('')
 const activeCategoryId = ref(menuCategories[0].id)
 const isPickerOpen = ref(false)
+const announcement = ref('')
 
+const search = ref(null)
 const tabBar = ref(null)
 const tabScroller = ref(null)
 const sectionEls = {}
 const tabEls = {}
 
-const activeGroupId = computed(
-  () => menuCategories.find((category) => category.id === activeCategoryId.value).groupId,
+const isSearching = computed(() => query.value.trim() !== '')
+
+// While searching, show only matching items. "Most ordered" items also live in their own
+// category, so that section is left out of results to avoid listing them twice.
+const visibleGroups = computed(() => {
+  if (!isSearching.value) return menuGroups
+  return menuGroups
+    .filter((group) => group.id !== 'popular')
+    .map((group) => ({ ...group, categories: searchMenu(group.categories, query.value) }))
+    .filter((group) => group.categories.length)
+})
+
+const resultCount = computed(() =>
+  visibleGroups.value
+    .flatMap((group) => group.categories)
+    .reduce((total, category) => total + category.items.length, 0),
 )
 
-const groupOptions = computed(() =>
-  menuGroups.map((group) => ({ value: group.id, label: t(`menu.groups.${group.id}`) })),
-)
+const resultSummary = computed(() => {
+  const vars = { count: resultCount.value, query: query.value.trim() }
+  if (resultCount.value === 0) return t('menu.search.noResults', vars)
+  return t(resultCount.value === 1 ? 'menu.search.resultsOne' : 'menu.search.resultsOther', vars)
+})
+
+let announceTimer
+watch(resultSummary, (summary) => {
+  clearTimeout(announceTimer)
+  announceTimer = setTimeout(() => {
+    announcement.value = isSearching.value ? summary : ''
+  }, ANNOUNCE_DELAY_MS)
+})
 
 let isJumping = false
 let jumpIdleTimer
@@ -63,6 +94,7 @@ const waitForJumpToSettle = () => {
 }
 
 const onScroll = () => {
+  if (isSearching.value) return
   if (isJumping) waitForJumpToSettle()
   else if (spyFrame === undefined) spyFrame = requestAnimationFrame(updateActiveCategory)
 }
@@ -74,12 +106,17 @@ const scrollToCategory = (categoryId) => {
   sectionEls[categoryId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-const selectGroup = async (groupId) => {
+const selectCategory = async (categoryId) => {
   isPickerOpen.value = false
-  // Wait for the sheet to release the scroll lock before scrolling the page.
+  query.value = ''
+  // Wait for the full menu to render and the sheet to release the scroll lock.
   await nextTick()
-  const group = menuGroups.find((candidate) => candidate.id === groupId)
-  scrollToCategory(group.categories[0].id)
+  scrollToCategory(categoryId)
+}
+
+const clearSearch = () => {
+  query.value = ''
+  search.value.focus()
 }
 
 // Keep the active tab visible inside the horizontally scrolling tab strip.
@@ -95,6 +132,7 @@ onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
   clearTimeout(jumpIdleTimer)
+  clearTimeout(announceTimer)
   if (spyFrame !== undefined) cancelAnimationFrame(spyFrame)
 })
 </script>
@@ -102,10 +140,22 @@ onBeforeUnmount(() => {
 <template>
   <OutletIntro discover="fields" />
 
-  <nav ref="tabBar" class="tabs" :aria-label="t('menu.pickerTitle')">
-    <button type="button" class="tabs__picker" @click="isPickerOpen = true">
+  <div class="menu-search">
+    <MenuSearch ref="search" v-model="query" />
+    <p v-if="isSearching && resultCount" class="menu-search__summary">{{ resultSummary }}</p>
+    <p class="visually-hidden" role="status">{{ announcement }}</p>
+  </div>
+
+  <nav v-if="!isSearching" ref="tabBar" class="tabs" :aria-label="t('menu.allCategories')">
+    <button
+      type="button"
+      class="tabs__picker"
+      aria-haspopup="dialog"
+      :aria-label="t('menu.allCategories')"
+      @click="isPickerOpen = true"
+    >
       <span class="tabs__picker-icon" aria-hidden="true"><i /><i /><i /></span>
-      {{ t(`menu.groups.${activeGroupId}`) }}
+      {{ t('menu.allShort') }}
     </button>
     <div ref="tabScroller" class="tabs__scroller">
       <button
@@ -121,12 +171,20 @@ onBeforeUnmount(() => {
         {{ t(`menu.categories.${category.id}`) }}
       </button>
     </div>
+    <button
+      type="button"
+      class="tabs__search"
+      :aria-label="t('menu.search.open')"
+      @click="search.focus()"
+    >
+      <AppIcon name="search" />
+    </button>
   </nav>
 
   <div class="menu">
-    <template v-for="group in menuGroups" :key="group.id">
-      <h2 class="menu__group">
-        <span>{{ t(`menu.groups.${group.id}`) }}</span>
+    <template v-for="group in visibleGroups" :key="group.id">
+      <h2 v-if="!group.hideHeading" class="menu__group">
+        {{ t(`menu.groups.${group.id}`) }}
       </h2>
 
       <section
@@ -138,22 +196,53 @@ onBeforeUnmount(() => {
       >
         <h3 :id="`category-${category.id}`" class="menu__category-title">
           {{ t(`menu.categories.${category.id}`) }}
+          <span class="menu__category-count" aria-hidden="true">{{ category.items.length }}</span>
         </h3>
-        <ul class="menu__grid">
-          <li v-for="item in category.items" :key="item.id">
-            <MenuItemCard :item="item" />
+        <ul class="menu__list">
+          <li v-for="item in category.items" :key="item.id" class="menu__list-item">
+            <MenuItemRow :item="item" />
           </li>
         </ul>
       </section>
     </template>
+
+    <div v-if="isSearching && !resultCount" class="empty">
+      <p class="empty__title">{{ resultSummary }}</p>
+      <p class="empty__hint">{{ t('menu.search.noResultsHint') }}</p>
+      <div class="empty__actions">
+        <button type="button" class="empty__button" @click="clearSearch">
+          {{ t('menu.search.clear') }}
+        </button>
+        <button
+          type="button"
+          class="empty__button empty__button--primary"
+          @click="isPickerOpen = true"
+        >
+          {{ t('menu.search.browse') }}
+        </button>
+      </div>
+    </div>
   </div>
 
-  <BottomSheet :open="isPickerOpen" :title="t('menu.pickerTitle')" @close="isPickerOpen = false">
-    <OptionList :options="groupOptions" :selected="activeGroupId" @select="selectGroup" />
-  </BottomSheet>
+  <CategorySheet
+    :open="isPickerOpen"
+    :active-category-id="activeCategoryId"
+    @close="isPickerOpen = false"
+    @select="selectCategory"
+  />
 </template>
 
 <style scoped>
+.menu-search {
+  padding: 16px 12px 4px;
+}
+
+.menu-search__summary {
+  margin: 12px 4px 0;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+
 .tabs {
   position: sticky;
   top: calc(var(--header-height) + var(--safe-top));
@@ -161,6 +250,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: stretch;
   height: var(--tabs-height);
+  margin-top: 12px;
   background: var(--color-surface);
   box-shadow: 0 1px 0 var(--color-border);
 }
@@ -172,8 +262,8 @@ onBeforeUnmount(() => {
   gap: 8px;
   padding: 0 12px 0 16px;
   border-right: 1px solid var(--color-border);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .tabs__picker-icon {
@@ -208,7 +298,7 @@ onBeforeUnmount(() => {
   padding: 0 14px;
   border-bottom: 3px solid transparent;
   color: var(--color-muted);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
   white-space: nowrap;
   transition:
@@ -217,9 +307,17 @@ onBeforeUnmount(() => {
 }
 
 .tabs__tab.is-active {
-  border-bottom-color: var(--color-accent);
+  border-bottom-color: var(--color-accent-strong);
   color: var(--color-text);
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.tabs__search {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 48px;
+  border-left: 1px solid var(--color-border);
 }
 
 .menu {
@@ -227,40 +325,88 @@ onBeforeUnmount(() => {
 }
 
 .menu__group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 24px 4px 4px;
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.menu__group::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--color-text);
-  opacity: 0.25;
+  margin: 28px 4px 0;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .menu__category {
   /* Land just below the sticky header + tab bar when jumped to. */
-  scroll-margin-top: calc(var(--header-height) + var(--tabs-height) + var(--safe-top));
-  padding-top: 12px;
+  scroll-margin-top: calc(var(--header-height) + var(--tabs-height) + var(--safe-top) + 12px);
+  margin-top: 12px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
 
 .menu__category-title {
-  margin: 0 4px 10px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-muted);
-  letter-spacing: 0.03em;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 16px 16px 4px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
-.menu__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+.menu__category-count {
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.menu__list {
+  padding: 0 16px 4px;
+}
+
+.menu__list-item + .menu__list-item {
+  border-top: 1px solid var(--color-border);
+}
+
+.empty {
+  margin-top: 16px;
+  padding: 24px 20px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.empty__title {
+  font-size: 17px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.empty__hint {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 15px;
+}
+
+.empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.empty__button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.empty__button--primary {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-surface);
 }
 </style>
