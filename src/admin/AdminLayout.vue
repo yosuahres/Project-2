@@ -49,6 +49,9 @@ const onKeydown = (event) => {
 
 <style scoped>
 .admin-shell {
+  /* Positioned, so the visually hidden labels inside (position: absolute) are clipped here
+     rather than stretching the whole document and letting the window scroll past the frame. */
+  position: relative;
   display: flex;
   height: 100vh;
   height: 100dvh;
