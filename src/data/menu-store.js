@@ -11,7 +11,7 @@ import { buildMenu, buildOutlet } from './menu'
 
 const CACHE_KEY = 'indah-puri:menu-rows'
 // Bump when the saved shape changes, so an old copy is ignored rather than misread.
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2
 
 const state = reactive({
   // 'loading' until there is something to show, then 'ready'; 'error' if there never was.
@@ -58,7 +58,7 @@ const fetchRows = async () => {
       .eq('is_visible', true),
     supabase
       .from('menu_items')
-      .select('id, category_id, name, price, sort_order, is_available, popular_rank')
+      .select('id, category_id, name, price, sort_order, is_available, is_sold_out, popular_rank')
       .eq('is_available', true),
     supabase.from('outlet').select('name, address, phone, maps_url').single(),
     supabase.from('outlet_hours').select('day, opens_at, closes_at, is_closed'),

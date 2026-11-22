@@ -5,7 +5,7 @@ import AdminTopbar from '../components/AdminTopbar.vue'
 import ItemDialog from '../components/ItemDialog.vue'
 import { formatPrice } from '@/data/menu'
 import { normalize } from '@/data/menu-search'
-import { describeError, moveRow } from '../menu-admin-api'
+import { describeError, moveRow, saveRow } from '../menu-admin-api'
 import { showToast } from '../toast'
 import { useMenuRows } from '../use-menu-rows'
 
@@ -26,6 +26,7 @@ const matchesStatus = (item) =>
   statusFilter.value === ALL ||
   (statusFilter.value === 'shown' && item.is_available) ||
   (statusFilter.value === 'hidden' && !item.is_available) ||
+  (statusFilter.value === 'sold-out' && item.is_sold_out) ||
   (statusFilter.value === 'popular' && item.popular_rank != null)
 
 const visibleItems = computed(() => {
@@ -64,6 +65,24 @@ const onDeleted = (id) => {
   remove('item', id)
   editing.value = undefined
   showToast(`Deleted “${name}”.`)
+}
+
+// Ids of items whose Available switch is saving, so a second tap can't race the first.
+const togglingIds = ref(new Set())
+
+const toggleSoldOut = async (item) => {
+  togglingIds.value = new Set(togglingIds.value).add(item.id)
+  try {
+    const saved = await saveRow('item', { id: item.id, is_sold_out: !item.is_sold_out })
+    upsert('item', saved)
+    showToast(saved.is_sold_out ? `“${saved.name}” is sold out.` : `“${saved.name}” is available.`)
+  } catch (cause) {
+    showToast(describeError(cause), 'error')
+  } finally {
+    const ids = new Set(togglingIds.value)
+    ids.delete(item.id)
+    togglingIds.value = ids
+  }
 }
 
 const isMoving = ref(false)
@@ -139,6 +158,7 @@ const move = async (index, direction) => {
                 <option :value="ALL">Any status</option>
                 <option value="shown">Shown</option>
                 <option value="hidden">Hidden</option>
+                <option value="sold-out">Sold out</option>
                 <option value="popular">Most ordered</option>
               </select>
             </label>
@@ -158,6 +178,7 @@ const move = async (index, direction) => {
                   <th scope="col">Name</th>
                   <th scope="col">Section</th>
                   <th scope="col" class="is-number">Price</th>
+                  <th scope="col">Available</th>
                   <th scope="col">Status</th>
                   <th scope="col" class="is-actions">
                     <span class="visually-hidden">Actions</span>
@@ -173,6 +194,20 @@ const move = async (index, direction) => {
                   </td>
                   <td>{{ sectionName(item) }}</td>
                   <td class="is-number is-strong">{{ formatPrice(item.price) }}</td>
+                  <td>
+                    <label class="switch">
+                      <input
+                        type="checkbox"
+                        role="switch"
+                        :checked="!item.is_sold_out"
+                        :disabled="togglingIds.has(item.id)"
+                        :aria-label="`${item.name} available`"
+                        @change="toggleSoldOut(item)"
+                      />
+                      <span class="switch__track" aria-hidden="true" />
+                      <span class="switch__label">{{ item.is_sold_out ? 'Sold out' : 'Yes' }}</span>
+                    </label>
+                  </td>
                   <td>
                     <span class="badges">
                       <span v-if="!item.is_available" class="admin-badge">Hidden</span>

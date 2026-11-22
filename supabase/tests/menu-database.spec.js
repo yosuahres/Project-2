@@ -74,7 +74,7 @@ beforeAll(async () => {
 describe('the seed', () => {
   it('holds the bundled menu exactly', async () => {
     const items = await db.query(
-      `select id, category_id, name, price, sort_order, is_available, popular_rank
+      `select id, category_id, name, price, sort_order, is_available, is_sold_out, popular_rank
          from public.menu_items order by id`,
     )
     const expected = [...bundledMenuRows.items].sort((a, b) => (a.id < b.id ? -1 : 1))
@@ -202,6 +202,22 @@ describe('an admin', () => {
       db.query('delete from public.menu_items where id = $1 returning id', [id]),
     )
     expect(deleted.rows).toHaveLength(1)
+  })
+
+  it('marks an item sold out, which guests still see, flagged', async () => {
+    const changed = await as(staffId, () =>
+      db.query("update public.menu_items set is_sold_out = true where id = 'hf-5' returning id"),
+    )
+    expect(changed.rows).toHaveLength(0)
+
+    await as(adminId, () =>
+      db.query("update public.menu_items set is_sold_out = true where id = 'hf-5'"),
+    )
+    const { rows } = await asGuest(() =>
+      db.query("select is_sold_out from public.menu_items where id = 'hf-5'"),
+    )
+    expect(rows).toEqual([{ is_sold_out: true }])
+    await db.query("update public.menu_items set is_sold_out = false where id = 'hf-5'")
   })
 
   it('edits the outlet and its hours', async () => {

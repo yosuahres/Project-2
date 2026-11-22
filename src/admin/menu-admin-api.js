@@ -7,7 +7,8 @@ const ORDER_STEP = 10
 
 const GROUP_COLUMNS = 'id, name_en, name_id, sort_order'
 const CATEGORY_COLUMNS = 'id, group_id, name_en, name_id, keywords, sort_order, is_visible'
-const ITEM_COLUMNS = 'id, category_id, name, price, sort_order, is_available, popular_rank'
+const ITEM_COLUMNS =
+  'id, category_id, name, price, sort_order, is_available, is_sold_out, popular_rank'
 
 // Postgres error codes worth a sentence of their own.
 const FRIENDLY_ERRORS = {

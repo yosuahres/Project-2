@@ -1,14 +1,20 @@
 <script setup>
 import { formatPrice } from '@/data/menu'
+import { useI18n } from '@/i18n'
 
 defineProps({
   item: { type: Object, required: true },
 })
+
+const { t } = useI18n()
 </script>
 
 <template>
-  <article class="item">
-    <h4 class="item__name">{{ item.name }}</h4>
+  <article class="item" :class="{ 'is-sold-out': item.isSoldOut }">
+    <h4 class="item__name">
+      {{ item.name }}
+      <span v-if="item.isSoldOut" class="item__sold-out">{{ t('menu.soldOut') }}</span>
+    </h4>
     <p class="item__price">{{ formatPrice(item.price) }}</p>
   </article>
 </template>
@@ -40,5 +46,28 @@ defineProps({
   line-height: 1.4;
   white-space: nowrap;
   font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Still listed so guests know it exists, but clearly not orderable today. */
+.is-sold-out .item__name,
+.is-sold-out .item__price {
+  color: var(--color-muted);
+}
+
+.is-sold-out .item__price {
+  text-decoration: line-through;
+}
+
+.item__sold-out {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 600;
+  vertical-align: 1px;
+  white-space: nowrap;
 }
 </style>

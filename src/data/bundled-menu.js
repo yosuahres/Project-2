@@ -138,6 +138,7 @@ const items = categories.flatMap((category) =>
     price: item.price,
     sort_order: nthOrder(index),
     is_available: true,
+    is_sold_out: false,
     popular_rank: POPULAR_RANKS.get(item.id) ?? null,
   })),
 )

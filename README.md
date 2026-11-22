@@ -13,9 +13,11 @@ see only what is shown, and lets only the logins listed in `menu_admins` change 
 ## Setting up Supabase
 
 1. Create a Supabase project.
-2. In its SQL editor, run `supabase/migrations/0001_menu.sql`, then `0002_menu_seed.sql`. The
-   second fills in the menu as it stood before the move (214 items in 18 sections), the outlet and
-   its hours. Both are safe to run again; the seed never overwrites a change made in the admin.
+2. In its SQL editor, run the files in `supabase/migrations/` in order: `0001_menu.sql`,
+   `0002_menu_seed.sql`, `0003_item_sold_out.sql`. The seed fills in the menu as it stood before
+   the move (214 items in 18 sections), the outlet and its hours. All are safe to run again; the
+   seed never overwrites a change made in the admin. When a new file is added later, run just that
+   one.
 3. **Authentication → Sign In / Providers**: turn off "Allow new users to sign up". Admins are
    invited, never self-registered. (Even with sign-ups on, a new login could not edit anything,
    but there is no reason to allow them.)
@@ -48,7 +50,9 @@ not set up.
 `/admin` signs in with email and password and offers:
 
 - **Menu Items**: every item with its price, section and status. Search, filter by section or
-  status, add, edit, hide, delete. Picking one section lets you change the order of its items.
+  status, add, edit, hide, delete. The **Available** switch marks an item sold out in one tap:
+  guests still see it, greyed out and labelled "Sold out", until it is switched back. (Hiding an
+  item, in its edit dialog, takes it off the menu altogether.) Picking one section lets you change the order of its items.
   An item can be listed under "Most ordered" by giving it a position; use real sales figures.
 - **Setup → Sections**: the headings (Food, Drinks, …) and the sections under them (Rice, Beer, …),
   with their English and Indonesian names, search words, order and visibility.

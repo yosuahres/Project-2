@@ -310,6 +310,77 @@ select.admin-input {
   color: var(--orange-700);
 }
 
+.admin-badge--danger {
+  background: var(--rose-50);
+  color: var(--rose-700);
+}
+
+/* An on/off switch: a checkbox drawn as a track and knob, the finance app's black when on. */
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.switch input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.switch__track {
+  position: relative;
+  flex-shrink: 0;
+  width: 32px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--n-300);
+  transition: background-color 0.15s ease;
+}
+
+.switch__track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease;
+}
+
+.switch input:checked + .switch__track {
+  background: var(--n-900);
+}
+
+.switch input:checked + .switch__track::after {
+  transform: translateX(14px);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: 2px solid var(--n-900);
+  outline-offset: 2px;
+}
+
+.switch input:disabled + .switch__track {
+  opacity: 0.5;
+}
+
+.switch__label {
+  /* Wide enough for "Sold out", so flipping the switch never resizes the column. */
+  display: inline-block;
+  min-width: 4.5em;
+  color: var(--n-600);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
 /* Tables: the boxed, ruled table of the finance app's Settings lists. */
 
 .admin-table-frame {

@@ -26,6 +26,7 @@ const form = reactive({
   price: props.item ? String(props.item.price) : '',
   category_id: props.item?.category_id ?? props.categoryId,
   is_available: props.item?.is_available ?? true,
+  is_available_today: !(props.item?.is_sold_out ?? false),
   popular_rank: props.item?.popular_rank != null ? String(props.item.popular_rank) : '',
 })
 
@@ -56,6 +57,7 @@ const save = () =>
       price: priceValue.value,
       category_id: form.category_id,
       is_available: form.is_available,
+      is_sold_out: !form.is_available_today,
       popular_rank: form.popular_rank === '' ? null : Number(form.popular_rank),
     }
     // A new item, or one moved to another section, goes to the end of that section.
@@ -135,6 +137,16 @@ const remove = () =>
         <input v-model="form.is_available" type="checkbox" form="item-form" />
         Shown on the menu
       </label>
+
+      <div class="admin-field">
+        <label class="admin-check">
+          <input v-model="form.is_available_today" type="checkbox" form="item-form" />
+          Available to order
+        </label>
+        <span class="admin-hint">
+          Untick when it runs out: guests still see it, marked “Sold out”.
+        </span>
+      </div>
 
       <div class="admin-field">
         <label for="item-rank" class="admin-label">“Most ordered” position</label>

@@ -8,7 +8,12 @@ const bySortOrder = (a, b) => a.sort_order - b.sort_order || a.id.localeCompare(
 
 const toName = (row) => ({ en: row.name_en, id: row.name_id })
 
-const toItem = ({ id, name, price }) => ({ id, name, price })
+const toItem = ({ id, name, price, is_sold_out }) => ({
+  id,
+  name,
+  price,
+  isSoldOut: Boolean(is_sold_out),
+})
 
 // Map.groupBy, which older phones (iOS 16 and earlier) don't have.
 const groupBy = (rows, keyOf) => {
