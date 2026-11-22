@@ -89,27 +89,12 @@ const wordMatches = (word, { text, isTyped }, allowTypos) => {
   return allowTypos && isTyped && isTypo(word, text)
 }
 
-// Words that mean "this whole section", e.g. typing "beer" should also list Heineken.
-// Only for sections whose item names don't already say what they are.
-const CATEGORY_KEYWORDS = {
-  japanese: ['japanese', 'jepang', 'korean', 'korea'],
-  western: ['western'],
-  breakfast: ['breakfast', 'sarapan'],
-  vegetables: ['vegetarian'],
-  snacks: ['snack', 'camilan'],
-  desserts: ['dessert', 'ice', 'cream', 'krim'],
-  softDrinks: ['soft', 'soda', 'ringan'],
-  beer: ['beer', 'bir'],
-  spirits: ['spirit', 'liquor'],
-  bottles: ['bottle', 'botol', 'wine', 'spirit'],
-  cigarettes: ['cigarette', 'rokok'],
-}
-
 const buildIndex = (categories) =>
   categories.flatMap((category) =>
     category.items.map((item) => ({
       key: `${category.id}:${item.id}`,
-      words: [...toWords(item.name), ...(CATEGORY_KEYWORDS[category.id] ?? [])],
+      // A section's keywords mean "this whole section": typing "beer" also lists Heineken.
+      words: [...toWords(item.name), ...(category.keywords ?? []).flatMap(toWords)],
     })),
   )
 

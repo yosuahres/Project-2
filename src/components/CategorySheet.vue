@@ -1,7 +1,7 @@
 <script setup>
 import BottomSheet from './BottomSheet.vue'
 import { useI18n } from '@/i18n'
-import { menuGroups } from '@/data/menu'
+import { useMenu } from '@/data/menu-store'
 
 defineProps({
   open: { type: Boolean, default: false },
@@ -9,14 +9,15 @@ defineProps({
 })
 
 const emit = defineEmits(['close', 'select'])
-const { t } = useI18n()
+const { t, localize } = useI18n()
+const { menuGroups } = useMenu()
 </script>
 
 <template>
   <BottomSheet :open="open" :title="t('menu.allCategories')" @close="emit('close')">
     <nav :aria-label="t('menu.allCategories')">
       <section v-for="group in menuGroups" :key="group.id" class="group">
-        <h3 v-if="!group.hideHeading" class="group__title">{{ t(`menu.groups.${group.id}`) }}</h3>
+        <h3 v-if="!group.hideHeading" class="group__title">{{ localize(group.name) }}</h3>
         <ul>
           <li v-for="category in group.categories" :key="category.id">
             <button
@@ -26,7 +27,7 @@ const { t } = useI18n()
               :aria-current="category.id === activeCategoryId ? 'true' : undefined"
               @click="emit('select', category.id)"
             >
-              <span>{{ t(`menu.categories.${category.id}`) }}</span>
+              <span>{{ localize(category.name) }}</span>
               <span class="category__count">
                 {{ t('menu.itemCount', { count: category.items.length }) }}
               </span>

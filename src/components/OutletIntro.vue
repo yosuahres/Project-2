@@ -3,7 +3,8 @@ import { computed } from 'vue'
 import AppIcon from './AppIcon.vue'
 import logo from '@/assets/icons/ip-logo.png'
 import { useI18n } from '@/i18n'
-import { formatHours, getTodayHours, outlet } from '@/data/outlet'
+import { formatHours, getTodayHours } from '@/data/menu'
+import { useMenu } from '@/data/menu-store'
 
 const props = defineProps({
   // Which page the "Discover More" button leads to.
@@ -15,19 +16,28 @@ const props = defineProps({
 })
 
 const { lang, t } = useI18n()
+const { outlet } = useMenu()
 
-const todayHours = formatHours(getTodayHours())
+const todayHours = computed(() => {
+  if (!outlet.value) return ''
+  const hours = formatHours(getTodayHours(outlet.value))
+  return hours ? t('intro.openToday', { hours }) : t('intro.closedToday')
+})
 const discoverIcon = computed(() => (props.discover === 'menu' ? 'utensils' : 'flag'))
 </script>
 
 <template>
   <section class="intro">
-    <img :src="logo" :alt="outlet.name" class="intro__logo" width="343" height="153" />
+    <img :src="logo" alt="Indah Puri" class="intro__logo" width="343" height="153" />
 
-    <RouterLink :to="{ name: 'about', params: { lang } }" class="intro__card intro__outlet">
+    <RouterLink
+      v-if="outlet"
+      :to="{ name: 'about', params: { lang } }"
+      class="intro__card intro__outlet"
+    >
       <div>
         <h1 class="intro__name">{{ outlet.name }}</h1>
-        <p class="intro__hours">{{ t('intro.openToday', { hours: todayHours }) }}</p>
+        <p class="intro__hours">{{ todayHours }}</p>
       </div>
       <AppIcon name="chevronRight" :size="22" />
     </RouterLink>

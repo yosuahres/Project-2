@@ -44,7 +44,15 @@ export default [
 
   {
     ...pluginVitest.configs.recommended,
-    files: ['src/**/__tests__/*'],
+    files: ['src/**/__tests__/*', 'supabase/tests/*'],
+  },
+
+  {
+    name: 'app/database-tests',
+    files: ['supabase/tests/*'],
+    languageOptions: {
+      globals: globals.node,
+    },
   },
   skipFormatting,
 ]

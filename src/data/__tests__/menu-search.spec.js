@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { searchMenu } from '@/data/menu-search'
-import { menuCategories } from '@/data/menu'
+import { buildMenu } from '@/data/menu'
+import { bundledMenuRows } from '@/data/bundled-menu'
+
+const menuCategories = buildMenu(bundledMenuRows).categories
 
 const findNames = (query) =>
   searchMenu(menuCategories, query).flatMap((category) => category.items.map((item) => item.name))

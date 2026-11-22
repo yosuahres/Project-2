@@ -43,6 +43,8 @@ export const useI18n = () => {
     isSupportedLanguage(route.params.lang) ? route.params.lang : DEFAULT_LANGUAGE,
   )
   const t = (key, vars) => translate(lang.value, key, vars)
+  // For names that come with the data, as { en, id }, rather than from messages.js.
+  const localize = (name) => name?.[lang.value] || name?.[DEFAULT_LANGUAGE] || ''
 
-  return { lang, t }
+  return { lang, t, localize }
 }

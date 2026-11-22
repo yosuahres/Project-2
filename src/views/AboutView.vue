@@ -1,28 +1,34 @@
 <script setup>
 import { computed } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
+import LoadStatus from '@/components/LoadStatus.vue'
 import { useI18n } from '@/i18n'
-import { outlet } from '@/data/outlet'
+import { formatHours } from '@/data/menu'
+import { useMenu } from '@/data/menu-store'
 
 // Monday-first, using Date#getDay() indexes (0 = Sunday).
 const WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0]
 
 const { t } = useI18n()
+const { status, outlet, retry } = useMenu()
 const todayIndex = new Date().getDay()
 
 const days = computed(() => {
+  if (!outlet.value) return []
   const names = t('about.days')
   return WEEK_ORDER.map((index) => ({
     index,
     name: names[index],
-    hours: `${outlet.hours[index].open} – ${outlet.hours[index].close}`,
+    hours: formatHours(outlet.value.hours[index], ' – ') ?? t('about.closed'),
     isToday: index === todayIndex,
   }))
 })
 </script>
 
 <template>
-  <div class="about">
+  <LoadStatus v-if="status !== 'ready'" :status="status" @retry="retry" />
+
+  <div v-else class="about">
     <section class="about__card">
       <h1 class="about__name">{{ outlet.name }}</h1>
       <p class="about__address">

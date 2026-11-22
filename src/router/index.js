@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { getSavedLanguage, saveLanguage, translate } from '@/i18n'
 import MenuView from '@/views/MenuView.vue'
+import { adminGuard } from '@/admin/auth'
 
 const LANG = ':lang(en|id)'
 
@@ -26,6 +27,39 @@ const routes = [
     component: () => import('@/views/AboutView.vue'),
     meta: { titleKey: 'nav.about', showBack: true },
   },
+  // The menu admin. Not translated: it is for staff, and lives outside the language paths.
+  {
+    path: '/admin/login',
+    name: 'admin-login',
+    component: () => import('@/admin/views/AdminLoginView.vue'),
+    meta: { admin: true, title: 'Sign in' },
+  },
+  {
+    path: '/admin',
+    component: () => import('@/admin/AdminLayout.vue'),
+    meta: { admin: true, requiresAdmin: true },
+    children: [
+      { path: '', redirect: { name: 'admin-menu' } },
+      {
+        path: 'menu',
+        name: 'admin-menu',
+        component: () => import('@/admin/views/AdminItemsView.vue'),
+        meta: { title: 'Menu Items' },
+      },
+      {
+        path: 'sections',
+        name: 'admin-sections',
+        component: () => import('@/admin/views/AdminSectionsView.vue'),
+        meta: { title: 'Sections' },
+      },
+      {
+        path: 'outlet',
+        name: 'admin-outlet',
+        component: () => import('@/admin/views/AdminOutletView.vue'),
+        meta: { title: 'Outlet & Hours' },
+      },
+    ],
+  },
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]
 
@@ -40,7 +74,14 @@ const router = createRouter({
   },
 })
 
+router.beforeEach(adminGuard)
+
 router.afterEach((to) => {
+  if (to.meta.admin) {
+    document.title = `${to.meta.title ?? 'Menu admin'} · Menu Admin`
+    return
+  }
+
   const lang = to.params.lang
   if (!lang) return
 

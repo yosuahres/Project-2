@@ -1,0 +1,487 @@
+/* The admin pages, drawn to match the finance app (finance-apps): monochrome, white surfaces,
+   black ink, hairline borders, Geist. The values are finance's Tailwind classes written out as
+   plain CSS, so the guest pages keep their own look and never load any of this. Everything sits
+   under .admin. */
+@import '@fontsource-variable/geist';
+
+.admin {
+  /* Tailwind's neutral scale and the few colours the finance app uses beside it. */
+  --n-50: #fafafa;
+  --n-100: #f5f5f5;
+  --n-200: #e5e5e5;
+  --n-300: #d4d4d4;
+  --n-400: #a3a3a3;
+  --n-500: #737373;
+  --n-600: #525252;
+  --n-700: #404040;
+  --n-800: #262626;
+  --n-900: #171717;
+  --line-5: rgba(0, 0, 0, 0.05);
+  --line-8: rgba(0, 0, 0, 0.08);
+  --line-10: rgba(0, 0, 0, 0.1);
+  --line-12: rgba(0, 0, 0, 0.12);
+  --line-15: rgba(0, 0, 0, 0.15);
+  --rose-50: #fff1f2;
+  --rose-200: #fecdd3;
+  --rose-500: #f43f5e;
+  --rose-600: #e11d48;
+  --rose-700: #be123c;
+  --orange-100: #ffedd5;
+  --orange-700: #c2410c;
+  --emerald-50: #ecfdf5;
+  --emerald-200: #a7f3d0;
+  --emerald-700: #047857;
+  --blue-600: #2563eb;
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  background: #ffffff;
+  color: var(--n-900);
+  font-family: 'Geist Variable', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.admin svg {
+  flex-shrink: 0;
+}
+
+.admin :focus-visible {
+  outline: 2px solid var(--n-900);
+  outline-offset: 2px;
+}
+
+.admin-muted {
+  color: var(--n-500);
+  font-size: 14px;
+}
+
+/* Buttons: 36px on a phone, 32px from 640px, as the finance app draws them. */
+
+.admin-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line-10);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--n-700);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    opacity 0.15s ease,
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.admin-button:hover:not(:disabled) {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.admin-button:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.admin-button--primary {
+  border-color: var(--n-900);
+  background: var(--n-900);
+  color: #ffffff;
+}
+
+.admin-button--primary:hover:not(:disabled) {
+  border-color: var(--n-900);
+  opacity: 0.85;
+}
+
+.admin-button--ghost {
+  border-color: transparent;
+  background: transparent;
+  padding: 0 10px;
+}
+
+.admin-button--ghost:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--n-100);
+}
+
+.admin-button--danger-ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--rose-600);
+  padding: 0 10px;
+}
+
+.admin-button--danger-ghost:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--rose-50);
+}
+
+.admin-button--danger {
+  border-color: var(--rose-600);
+  background: var(--rose-600);
+  color: #ffffff;
+}
+
+.admin-button--danger:hover:not(:disabled) {
+  border-color: var(--rose-500);
+  background: var(--rose-500);
+}
+
+.admin-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: var(--n-500);
+}
+
+.admin-icon-button:hover:not(:disabled) {
+  background: var(--n-100);
+  color: var(--n-900);
+}
+
+.admin-icon-button:disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+@media (min-width: 640px) {
+  .admin-button {
+    height: 32px;
+  }
+}
+
+/* Forms */
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.admin-grid {
+  display: grid;
+  gap: 20px 40px;
+}
+
+@media (min-width: 768px) {
+  .admin-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-grid .admin-span-2 {
+    grid-column: span 2;
+  }
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-label {
+  color: var(--n-900);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.admin-hint {
+  color: var(--n-500);
+  font-size: 12px;
+}
+
+.admin-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--line-15);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--n-900);
+  font: inherit;
+  font-size: 16px;
+  outline: none;
+}
+
+.admin-input::placeholder {
+  color: var(--n-500);
+}
+
+.admin-input:focus {
+  border-color: var(--n-900);
+  box-shadow: 0 0 0 1px var(--n-900);
+}
+
+.admin-input[aria-invalid='true'] {
+  border-color: var(--rose-600);
+  box-shadow: 0 0 0 1px var(--rose-600);
+}
+
+.admin-input:disabled {
+  opacity: 0.5;
+}
+
+textarea.admin-input {
+  height: auto;
+  min-height: 88px;
+  padding: 10px 14px;
+  resize: vertical;
+}
+
+select.admin-input {
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 640px) {
+  .admin-input {
+    font-size: 14px;
+  }
+}
+
+.admin-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--n-800);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.admin-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--n-900);
+}
+
+.admin-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--rose-200);
+  border-radius: 6px;
+  background: var(--rose-50);
+  color: var(--rose-700);
+  font-size: 14px;
+}
+
+.admin-error svg {
+  margin-top: 2px;
+}
+
+.admin-notice {
+  padding: 8px 12px;
+  border: 1px solid var(--emerald-200);
+  border-radius: 6px;
+  background: var(--emerald-50);
+  color: var(--emerald-700);
+  font-size: 14px;
+}
+
+/* Pills */
+
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--n-100);
+  color: var(--n-500);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.admin-badge--accent {
+  background: var(--orange-100);
+  color: var(--orange-700);
+}
+
+/* Tables: the boxed, ruled table of the finance app's Settings lists. */
+
+.admin-table-frame {
+  overflow: auto;
+  border: 1px solid var(--line-12);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table th {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-12);
+  background: var(--n-50);
+  color: var(--n-600);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-12);
+  color: var(--n-600);
+  vertical-align: middle;
+}
+
+.admin-table th + th,
+.admin-table td + td {
+  border-left: 1px solid var(--line-12);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover td {
+  background: var(--n-50);
+}
+
+.admin-table .is-number {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-table .is-strong {
+  color: var(--n-900);
+}
+
+.admin-table .is-actions {
+  width: 1%;
+  padding: 4px 6px;
+  white-space: nowrap;
+}
+
+.admin-empty {
+  padding: 40px 16px;
+  color: var(--n-500);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Toolbar above a table */
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-search {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 320px;
+}
+
+.admin-search svg {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  color: var(--n-400);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.admin-toolbar-input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 36px;
+  border: 1px solid var(--line-10);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--n-900);
+  font: inherit;
+  font-size: 16px;
+}
+
+.admin-toolbar-input::placeholder {
+  color: var(--n-400);
+}
+
+.admin-toolbar-input:focus {
+  outline: 2px solid var(--n-800);
+  outline-offset: 0;
+}
+
+select.admin-toolbar-input {
+  width: auto;
+  padding: 0 32px 0 12px;
+  appearance: none;
+  color: var(--n-700);
+  font-weight: 500;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 10px center;
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 640px) {
+  .admin-toolbar-input {
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+/* A page's body: divider-separated blocks, like the finance app's FormSection. */
+
+.admin-section {
+  padding: 24px 16px;
+  border-bottom: 1px solid var(--line-8);
+}
+
+.admin-section__inner {
+  max-width: 896px;
+  margin: 0 auto;
+}
+
+.admin-section__inner--wide {
+  max-width: none;
+}
+
+.admin-section__title {
+  margin-bottom: 16px;
+  color: var(--n-900);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-section__caption {
+  margin: -12px 0 16px;
+  color: var(--n-500);
+  font-size: 12px;
+}
+
+@media (min-width: 640px) {
+  .admin-section {
+    padding: 32px 24px;
+  }
+
+  .admin-section__title {
+    margin-bottom: 24px;
+  }
+
+  .admin-section__caption {
+    margin-top: -20px;
+  }
+}

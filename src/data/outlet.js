@@ -1,3 +1,5 @@
+// The outlet as it stood before it moved to Supabase. Like the bundled menu, it is shown only
+// when the app runs without Supabase settings; the live details are edited in /admin.
 export const outlet = {
   name: 'Indah Puri',
   address:
@@ -7,7 +9,3 @@ export const outlet = {
   // Index 0 = Sunday, matching Date.prototype.getDay().
   hours: Array.from({ length: 7 }, () => ({ open: '06:00', close: '19:00' })),
 }
-
-export const formatHours = ({ open, close }) => `${open}-${close}`
-
-export const getTodayHours = (date = new Date()) => outlet.hours[date.getDay()]

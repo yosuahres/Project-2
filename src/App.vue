@@ -1,8 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import AppHeader from '@/components/AppHeader.vue'
 import SideDrawer from '@/components/SideDrawer.vue'
 import LanguageSheet from '@/components/LanguageSheet.vue'
+
+// Admin pages bring their own frame, without the guest header and drawer.
+const route = useRoute()
+const isAdminPage = computed(() => Boolean(route.meta.admin))
 
 const isNavOpen = ref(false)
 const isLanguageOpen = ref(false)
@@ -14,15 +19,19 @@ const openLanguage = () => {
 </script>
 
 <template>
-  <div class="app-shell">
-    <AppHeader @open-nav="isNavOpen = true" />
-    <main class="app-main">
-      <RouterView />
-    </main>
-  </div>
+  <RouterView v-if="isAdminPage" />
 
-  <SideDrawer :open="isNavOpen" @close="isNavOpen = false" @open-language="openLanguage" />
-  <LanguageSheet :open="isLanguageOpen" @close="isLanguageOpen = false" />
+  <template v-else>
+    <div class="app-shell">
+      <AppHeader @open-nav="isNavOpen = true" />
+      <main class="app-main">
+        <RouterView />
+      </main>
+    </div>
+
+    <SideDrawer :open="isNavOpen" @close="isNavOpen = false" @open-language="openLanguage" />
+    <LanguageSheet :open="isLanguageOpen" @close="isLanguageOpen = false" />
+  </template>
 </template>
 
 <style scoped>

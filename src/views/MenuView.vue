@@ -5,8 +5,10 @@ import MenuSearch from '@/components/MenuSearch.vue'
 import MenuItemRow from '@/components/MenuItemRow.vue'
 import CategorySheet from '@/components/CategorySheet.vue'
 import AppIcon from '@/components/AppIcon.vue'
+import LoadStatus from '@/components/LoadStatus.vue'
 import { useI18n } from '@/i18n'
-import { menuCategories, menuGroups } from '@/data/menu'
+import { POPULAR_ID } from '@/data/menu'
+import { useMenu } from '@/data/menu-store'
 import { searchMenu } from '@/data/menu-search'
 
 // After a tab tap, the scroll-spy waits until the smooth scroll has been idle this long.
@@ -14,10 +16,11 @@ const SCROLL_IDLE_MS = 150
 // Screen readers hear the result count once typing pauses, not on every keystroke.
 const ANNOUNCE_DELAY_MS = 600
 
-const { t } = useI18n()
+const { t, localize } = useI18n()
+const { status, menuGroups, menuCategories, retry } = useMenu()
 
 const query = ref('')
-const activeCategoryId = ref(menuCategories[0].id)
+const activeCategoryId = ref(menuCategories.value[0]?.id)
 const isPickerOpen = ref(false)
 const announcement = ref('')
 
@@ -32,9 +35,9 @@ const isSearching = computed(() => query.value.trim() !== '')
 // While searching, show only matching items. "Most ordered" items also live in their own
 // category, so that section is left out of results to avoid listing them twice.
 const visibleGroups = computed(() => {
-  if (!isSearching.value) return menuGroups
-  return menuGroups
-    .filter((group) => group.id !== 'popular')
+  if (!isSearching.value) return menuGroups.value
+  return menuGroups.value
+    .filter((group) => group.id !== POPULAR_ID)
     .map((group) => ({ ...group, categories: searchMenu(group.categories, query.value) }))
     .filter((group) => group.categories.length)
 })
@@ -64,13 +67,14 @@ let jumpIdleTimer
 let spyFrame
 
 const findCategoryInView = () => {
+  const categories = menuCategories.value
   const isAtBottom =
     window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-  if (isAtBottom) return menuCategories[menuCategories.length - 1].id
+  if (isAtBottom) return categories[categories.length - 1].id
 
   const readingLine = tabBar.value.getBoundingClientRect().bottom + 12
-  let current = menuCategories[0].id
-  for (const category of menuCategories) {
+  let current = categories[0].id
+  for (const category of categories) {
     const section = sectionEls[category.id]
     if (section && section.getBoundingClientRect().top <= readingLine) current = category.id
   }
@@ -94,7 +98,7 @@ const waitForJumpToSettle = () => {
 }
 
 const onScroll = () => {
-  if (isSearching.value) return
+  if (isSearching.value || !menuCategories.value.length) return
   if (isJumping) waitForJumpToSettle()
   else if (spyFrame === undefined) spyFrame = requestAnimationFrame(updateActiveCategory)
 }
@@ -119,6 +123,13 @@ const clearSearch = () => {
   search.value.focus()
 }
 
+// When the menu arrives or changes (fresh rows replacing the saved copy), keep a tab selected.
+watch(menuCategories, (categories) => {
+  if (!categories.some((category) => category.id === activeCategoryId.value)) {
+    activeCategoryId.value = categories[0]?.id
+  }
+})
+
 // Keep the active tab visible inside the horizontally scrolling tab strip.
 watch(activeCategoryId, (categoryId) => {
   const scroller = tabScroller.value
@@ -140,89 +151,93 @@ onBeforeUnmount(() => {
 <template>
   <OutletIntro discover="fields" />
 
-  <div class="menu-search">
-    <MenuSearch ref="search" v-model="query" />
-    <p v-if="isSearching && resultCount" class="menu-search__summary">{{ resultSummary }}</p>
-    <p class="visually-hidden" role="status">{{ announcement }}</p>
-  </div>
+  <LoadStatus v-if="status !== 'ready'" :status="status" @retry="retry" />
 
-  <nav v-if="!isSearching" ref="tabBar" class="tabs" :aria-label="t('menu.allCategories')">
-    <button
-      type="button"
-      class="tabs__picker"
-      aria-haspopup="dialog"
-      :aria-label="t('menu.allCategories')"
-      @click="isPickerOpen = true"
-    >
-      <span class="tabs__picker-icon" aria-hidden="true"><i /><i /><i /></span>
-      {{ t('menu.allShort') }}
-    </button>
-    <div ref="tabScroller" class="tabs__scroller">
-      <button
-        v-for="category in menuCategories"
-        :key="category.id"
-        :ref="(el) => (tabEls[category.id] = el)"
-        type="button"
-        class="tabs__tab"
-        :class="{ 'is-active': category.id === activeCategoryId }"
-        :aria-current="category.id === activeCategoryId ? 'true' : undefined"
-        @click="scrollToCategory(category.id)"
-      >
-        {{ t(`menu.categories.${category.id}`) }}
-      </button>
+  <template v-else>
+    <div class="menu-search">
+      <MenuSearch ref="search" v-model="query" />
+      <p v-if="isSearching && resultCount" class="menu-search__summary">{{ resultSummary }}</p>
+      <p class="visually-hidden" role="status">{{ announcement }}</p>
     </div>
-    <button
-      type="button"
-      class="tabs__search"
-      :aria-label="t('menu.search.open')"
-      @click="search.focus()"
-    >
-      <AppIcon name="search" />
-    </button>
-  </nav>
 
-  <div class="menu">
-    <template v-for="group in visibleGroups" :key="group.id">
-      <h2 v-if="!group.hideHeading" class="menu__group">
-        {{ t(`menu.groups.${group.id}`) }}
-      </h2>
-
-      <section
-        v-for="category in group.categories"
-        :key="category.id"
-        :ref="(el) => (sectionEls[category.id] = el)"
-        class="menu__category"
-        :aria-labelledby="`category-${category.id}`"
+    <nav v-if="!isSearching" ref="tabBar" class="tabs" :aria-label="t('menu.allCategories')">
+      <button
+        type="button"
+        class="tabs__picker"
+        aria-haspopup="dialog"
+        :aria-label="t('menu.allCategories')"
+        @click="isPickerOpen = true"
       >
-        <h3 :id="`category-${category.id}`" class="menu__category-title">
-          {{ t(`menu.categories.${category.id}`) }}
-          <span class="menu__category-count" aria-hidden="true">{{ category.items.length }}</span>
-        </h3>
-        <ul class="menu__list">
-          <li v-for="item in category.items" :key="item.id" class="menu__list-item">
-            <MenuItemRow :item="item" />
-          </li>
-        </ul>
-      </section>
-    </template>
-
-    <div v-if="isSearching && !resultCount" class="empty">
-      <p class="empty__title">{{ resultSummary }}</p>
-      <p class="empty__hint">{{ t('menu.search.noResultsHint') }}</p>
-      <div class="empty__actions">
-        <button type="button" class="empty__button" @click="clearSearch">
-          {{ t('menu.search.clear') }}
-        </button>
+        <span class="tabs__picker-icon" aria-hidden="true"><i /><i /><i /></span>
+        {{ t('menu.allShort') }}
+      </button>
+      <div ref="tabScroller" class="tabs__scroller">
         <button
+          v-for="category in menuCategories"
+          :key="category.id"
+          :ref="(el) => (tabEls[category.id] = el)"
           type="button"
-          class="empty__button empty__button--primary"
-          @click="isPickerOpen = true"
+          class="tabs__tab"
+          :class="{ 'is-active': category.id === activeCategoryId }"
+          :aria-current="category.id === activeCategoryId ? 'true' : undefined"
+          @click="scrollToCategory(category.id)"
         >
-          {{ t('menu.search.browse') }}
+          {{ localize(category.name) }}
         </button>
       </div>
+      <button
+        type="button"
+        class="tabs__search"
+        :aria-label="t('menu.search.open')"
+        @click="search.focus()"
+      >
+        <AppIcon name="search" />
+      </button>
+    </nav>
+
+    <div class="menu">
+      <template v-for="group in visibleGroups" :key="group.id">
+        <h2 v-if="!group.hideHeading" class="menu__group">
+          {{ localize(group.name) }}
+        </h2>
+
+        <section
+          v-for="category in group.categories"
+          :key="category.id"
+          :ref="(el) => (sectionEls[category.id] = el)"
+          class="menu__category"
+          :aria-labelledby="`category-${category.id}`"
+        >
+          <h3 :id="`category-${category.id}`" class="menu__category-title">
+            {{ localize(category.name) }}
+            <span class="menu__category-count" aria-hidden="true">{{ category.items.length }}</span>
+          </h3>
+          <ul class="menu__list">
+            <li v-for="item in category.items" :key="item.id" class="menu__list-item">
+              <MenuItemRow :item="item" />
+            </li>
+          </ul>
+        </section>
+      </template>
+
+      <div v-if="isSearching && !resultCount" class="empty">
+        <p class="empty__title">{{ resultSummary }}</p>
+        <p class="empty__hint">{{ t('menu.search.noResultsHint') }}</p>
+        <div class="empty__actions">
+          <button type="button" class="empty__button" @click="clearSearch">
+            {{ t('menu.search.clear') }}
+          </button>
+          <button
+            type="button"
+            class="empty__button empty__button--primary"
+            @click="isPickerOpen = true"
+          >
+            {{ t('menu.search.browse') }}
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+  </template>
 
   <CategorySheet
     :open="isPickerOpen"
