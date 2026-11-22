@@ -110,7 +110,7 @@ const links = computed(() => [
 
 .drawer__item.router-link-active {
   background: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
 }
 
 .drawer__meta {

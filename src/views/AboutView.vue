@@ -91,7 +91,7 @@ const days = computed(() => {
 
 .about__address .icon {
   margin-top: 1px;
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
 }
 
 .about__actions {
@@ -152,7 +152,7 @@ const days = computed(() => {
   padding: 2px 8px;
   border-radius: 999px;
   background: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
   font-size: 11px;
   font-weight: 600;
 }

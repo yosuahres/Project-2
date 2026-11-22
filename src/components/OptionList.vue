@@ -58,8 +58,8 @@ const emit = defineEmits(['select'])
 }
 
 .option.is-selected {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
+  border-color: var(--color-accent-strong);
+  background: var(--color-accent-strong);
   color: #fff;
 }
 
@@ -70,6 +70,6 @@ const emit = defineEmits(['select'])
   height: 24px;
   border-radius: 50%;
   background: #fff;
-  color: var(--color-accent);
+  color: var(--color-accent-strong);
 }
 </style>
